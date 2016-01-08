@@ -1,7 +1,10 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
+using Rester.Model;
 
 namespace Rester.ViewModel
 {
@@ -16,11 +19,11 @@ namespace Rester.ViewModel
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                SimpleIoc.Default.Register<IDeviceStore, DesignDeviceStore>();
+                SimpleIoc.Default.Register<IServiceStore, DesignServiceStore>();
             }
             else
             {
-                SimpleIoc.Default.Register<IDeviceStore, DeviceStore>();
+                SimpleIoc.Default.Register<IServiceStore, ServiceStore>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();
@@ -30,17 +33,5 @@ namespace Rester.ViewModel
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
-    }
-
-    internal class DeviceStore : IDeviceStore
-    {
-    }
-
-    internal class DesignDeviceStore : IDeviceStore
-    {
-    }
-
-    public interface IDeviceStore
-    {
     }
 }
