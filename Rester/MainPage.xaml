@@ -9,6 +9,5 @@
     DataContext="{Binding Main, Source={StaticResource Locator}}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Text="{Binding Text}" />
     </Grid>
 </Page>

@@ -1,21 +1,25 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
+using Rester.Model;
 
 namespace Rester.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly IDeviceStore _deviceStore;
+        private readonly IServiceStore _serviceStore;
 
-        public MainViewModel(IDeviceStore deviceStore)
+        public MainViewModel(IServiceStore serviceStore)
         {
-            _deviceStore = deviceStore;
+            _serviceStore = serviceStore;
+            LoadData();
         }
 
-        private string _text = "Some dummy text";
-        public string Text
+        private async void LoadData()
         {
-            get { return _text; }
-            set { Set(nameof(Text), ref _text, value); }
+            var configs = await _serviceStore.GetServiceConfigurations();
+            ServiceConfigurations.ClearAndAddRange(configs);
         }
+
+        public ObservableCollection2<ServiceConfiguration> ServiceConfigurations { get; } = new ObservableCollection2<ServiceConfiguration>();
     }
 }
