@@ -19,7 +19,7 @@ namespace Rester.ViewModel
     {
         public Task<ServiceConfiguration[]> GetServiceConfigurations()
         {
-            var actions = Enumerable.Range(0, 3).Select(CreateAction);
+            var actions = Enumerable.Range(0, 7).Select(CreateAction);
             var endpoints = Enumerable.Range(0, 6).Select(i => CreateEndpoint(actions, i));
             var serviceConfigurations = Enumerable.Range(0, 3).Select(i => CreateServiceConfiguration(endpoints, i));
             return Task.FromResult(serviceConfigurations.ToArray());

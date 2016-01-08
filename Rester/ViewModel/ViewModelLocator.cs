@@ -23,7 +23,8 @@ namespace Rester.ViewModel
             }
             else
             {
-                SimpleIoc.Default.Register<IServiceStore, ServiceStore>();
+                SimpleIoc.Default.Register<IServiceStore, DesignServiceStore>();
+                //SimpleIoc.Default.Register<IServiceStore, ServiceStore>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();
