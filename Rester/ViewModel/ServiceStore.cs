@@ -21,8 +21,39 @@ namespace Rester.ViewModel
         {
             var actions = Enumerable.Range(0, 7).Select(CreateAction);
             var endpoints = Enumerable.Range(0, 6).Select(i => CreateEndpoint(actions, i));
-            var serviceConfigurations = Enumerable.Range(0, 3).Select(i => CreateServiceConfiguration(endpoints, i));
+            var serviceConfigurations = Enumerable.Range(0, 3).Select(i => CreateServiceConfiguration(endpoints, i)).ToList();
+            serviceConfigurations.Insert(0, CreateRealTestData());
             return Task.FromResult(serviceConfigurations.ToArray());
+        }
+
+        private ServiceConfiguration CreateRealTestData()
+        {
+            ServiceEndpointAction[] actions =
+            {
+                new ServiceEndpointAction
+                {
+                    Name = "På",
+                    Uri = "json.htm?type=command&param=switchlight&idx=1&switchcmd=On"
+                },
+                new ServiceEndpointAction
+                {
+                    Name = "Av",
+                    Uri = "json.htm?type=command&param=switchlight&idx=1&switchcmd=Off"
+                }
+            };
+            ServiceEndpoint[] endpoints =
+            {
+                new ServiceEndpoint(actions)
+                {
+                    Name = "Matrummet",
+                    Symbol = Symbol.Flag
+                }
+            };
+            return new ServiceConfiguration(endpoints)
+            {
+                Name = "Domoticz",
+                UriRoot = "http://mediamonstret:8070"
+            };
         }
 
         private static ServiceConfiguration CreateServiceConfiguration(IEnumerable<ServiceEndpoint> endpoints, int i)
