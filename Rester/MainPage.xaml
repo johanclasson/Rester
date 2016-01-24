@@ -43,11 +43,13 @@
             <AppBarButton Icon="Document" Label="Log"/>
         </CommandBar>
     </Page.BottomAppBar>
-    <GridView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" ItemTemplate="{StaticResource ServiceConfigurationTemplate}" ItemsSource="{Binding ServiceConfigurations}">
-        <GridView.ItemsPanel>
+    <ListView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+              ItemTemplate="{StaticResource ServiceConfigurationTemplate}"
+              ItemsSource="{Binding ServiceConfigurations}">
+        <ListView.ItemsPanel>
             <ItemsPanelTemplate>
-                <ItemsWrapGrid Orientation="Horizontal" />
+                <StackPanel Orientation="Vertical" />
             </ItemsPanelTemplate>
-        </GridView.ItemsPanel>
-    </GridView>
+        </ListView.ItemsPanel>
+    </ListView>
 </Page>
