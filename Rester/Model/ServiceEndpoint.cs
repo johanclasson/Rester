@@ -5,7 +5,7 @@ using GalaSoft.MvvmLight;
 
 namespace Rester.Model
 {
-    public class ServiceEndpoint : ObservableObject
+    internal class ServiceEndpoint : ObservableObject
     {
         public ServiceEndpoint()
         {
