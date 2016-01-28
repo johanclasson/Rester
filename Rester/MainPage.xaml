@@ -9,7 +9,7 @@
     DataContext="{Binding Main, Source={StaticResource Locator}}">
     <Page.Resources>
         <DataTemplate x:Key="ServiceEndpointActionTemplate">
-            <Button Content="{Binding Name}" CommandParameter="{Binding Uri}" />
+            <Button Content="{Binding Name}" Command="{Binding InvokeUriCommand}" />
         </DataTemplate>
         <DataTemplate x:Key="ServiceEndpointTemplate">
             <StackPanel Orientation="Vertical" Margin="0,0,0,10">

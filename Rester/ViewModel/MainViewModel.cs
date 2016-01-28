@@ -1,10 +1,9 @@
-﻿using System;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using Rester.Model;
 
 namespace Rester.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    internal class MainViewModel : ViewModelBase
     {
         private readonly IServiceStore _serviceStore;
 

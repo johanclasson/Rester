@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
-using Rester.Model;
 
 namespace Rester.ViewModel
 {
-    public class ViewModelLocator
+    internal class ViewModelLocator
     {
         static ViewModelLocator()
         {

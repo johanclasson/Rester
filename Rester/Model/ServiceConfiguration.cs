@@ -1,27 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
+using Rester.ViewModel;
 
 namespace Rester.Model
 {
-    public class ServiceConfiguration : ObservableObject
+    internal class ServiceConfiguration : ObservableObject
     {
         public ServiceConfiguration()
         {
-            Endpoints = new ObservableCollection<ServiceEndpoint>();
+            Endpoints = new ObservableCollection2<ServiceEndpoint>();
         }
 
-        public ServiceConfiguration(IEnumerable<ServiceEndpoint> endpoints)
-        {
-            Endpoints = new ObservableCollection<ServiceEndpoint>(endpoints);
-        }
-
-        public string UriRoot { get { return _uriRoot; } set { Set(nameof(UriRoot), ref _uriRoot, value); } }
-        private string _uriRoot;
+        public string BaseUri { get { return _baseUri; } set { Set(nameof(BaseUri), ref _baseUri, value); } }
+        private string _baseUri;
 
         public string Name { get { return _name; } set { Set(nameof(Name), ref _name, value); } }
         private string _name;
 
-        public ObservableCollection<ServiceEndpoint> Endpoints { get; }
+        public ObservableCollection2<ServiceEndpoint> Endpoints { get; }
     }
 }
