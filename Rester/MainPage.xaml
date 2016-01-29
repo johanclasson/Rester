@@ -45,7 +45,7 @@
                 <Grid/>
             </CommandBar.Content>
             <AppBarButton Icon="Edit" Label="Edit"/>
-            <AppBarButton Icon="Document" Label="Log"/>
+            <AppBarButton Icon="Document" Label="Log" Command="{Binding NavigateToLogCommand}"/>
         </CommandBar>
     </Page.BottomAppBar>
     <ListView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"

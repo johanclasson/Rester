@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -39,6 +40,7 @@ namespace Rester
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.Navigated += OnNavigated; // Back button guide: http://www.wintellect.com/devcenter/jprosise/handling-the-back-button-in-windows-10-uwp-apps
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -47,6 +49,15 @@ namespace Rester
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
+
+                // Register a handler for BackRequested events and set the
+                // visibility of the Back button
+                SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                    AppViewBackButtonVisibility.Visible :
+                    AppViewBackButtonVisibility.Collapsed;
             }
 
             if (rootFrame.Content == null)
@@ -66,6 +77,25 @@ namespace Rester
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
+        private void OnNavigated(object sender, NavigationEventArgs e)
+        {
+            // Each time a navigation event occurs, update the Back button's visibility
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                ((Frame)sender).CanGoBack ?
+                AppViewBackButtonVisibility.Visible :
+                AppViewBackButtonVisibility.Collapsed;
+        }
+
+        private void OnBackRequested(object sender, BackRequestedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame != null && rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
+        }
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
