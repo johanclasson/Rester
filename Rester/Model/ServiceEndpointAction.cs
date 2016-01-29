@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Windows.UI.Popups;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace Rester.Model
 {
@@ -23,9 +24,12 @@ namespace Rester.Model
                 ((RelayCommand)InvokeUriCommand).RaiseCanExecuteChanged();
                 try
                 {
+                    var watch = new Stopwatch();
+                    watch.Start();
                     HttpResponseMessage result = await InvokeUriAsync();
-                    if (result.StatusCode != HttpStatusCode.OK)
-                        await new MessageDialog($"Resultat: {result.StatusCode}").ShowAsync();
+                    var content = await result.Content.ReadAsStringAsync();
+                    watch.Stop();
+                    SendResponseNotificationMessage(result, content, watch.Elapsed);
                 }
                 catch (Exception ex)
                 {
@@ -34,6 +38,22 @@ namespace Rester.Model
                 Processing = false;
                 ((RelayCommand)InvokeUriCommand).RaiseCanExecuteChanged();
             }, () => !Processing);
+        }
+
+        private void SendResponseNotificationMessage(HttpResponseMessage result, string content, TimeSpan timeToResponse)
+        {
+            var messageContent = new HttpResponse
+            {
+                StatusCode = (int) result.StatusCode,
+                ReasonPhrase = result.ReasonPhrase,
+                Content = content.Trim(),
+                TimeToResponse = timeToResponse,
+                Uri = Uri.AbsoluteUri,
+                Method = Method,
+                CallTime = DateTime.Now,
+                IsSuccessfulStatusCode = result.IsSuccessStatusCode
+            };
+            Messenger.Default.Send(new NotificationMessage<HttpResponse>(messageContent, "Service Endpoint Action Result"));
         }
 
         private Uri Uri => new Uri(new Uri(Configuration.BaseUri), UriPath);
