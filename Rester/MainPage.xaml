@@ -3,11 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Rester.Controls"
+    xmlns:coverters="using:Rester.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     DataContext="{Binding Main, Source={StaticResource Locator}}">
     <Page.Resources>
+        <coverters:BooleanToVisibilityConverter x:Key="BoolToVis" />
         <DataTemplate x:Key="ServiceEndpointActionTemplate">
             <Button Content="{Binding Name}" Command="{Binding InvokeUriCommand}" />
         </DataTemplate>
@@ -44,7 +46,8 @@
             <CommandBar.Content>
                 <Grid/>
             </CommandBar.Content>
-            <AppBarButton Icon="Edit" Label="Edit"/>
+            <AppBarButton Icon="Edit" Label="Edit" Command="{Binding EditModeCommand}" Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}"/>
+            <AppBarButton Icon="Accept"  Label="Done" Command="{Binding EditCompletedCommand}" Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}"/>
             <AppBarButton Icon="Document" Label="Log" Command="{Binding NavigateToLogCommand}"/>
         </CommandBar>
     </Page.BottomAppBar>

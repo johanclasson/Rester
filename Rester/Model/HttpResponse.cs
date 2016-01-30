@@ -1,17 +1,10 @@
 using System;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
 using GalaSoft.MvvmLight;
 
 namespace Rester.Model
 {
     internal class HttpResponse : ObservableObject
     {
-        public HttpResponse()
-        {
-            CallTime = DateTime.Now;
-        }
-
         public int StatusCode { get { return _statusCode; } set { Set(nameof(StatusCode), ref _statusCode, value); } }
         private int _statusCode;
 
@@ -33,11 +26,7 @@ namespace Rester.Model
         public string Method { get { return _method; } set { Set(nameof(Method), ref _method, value); } }
         private string _method;
 
-        public SolidColorBrush MethodColor => new SolidColorBrush(IsSuccessfulStatusCode ? Colors.Green : Colors.Red);
-
         public bool IsSuccessfulStatusCode { get { return _isSuccessfulStatusCode; } set { Set(nameof(IsSuccessfulStatusCode), ref _isSuccessfulStatusCode, value); } }
         private bool _isSuccessfulStatusCode;
-
-
     }
 }
