@@ -1,22 +1,21 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Popups;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using Rester.Service;
 
 namespace Rester.Model
 {
     internal class ServiceEndpointAction : ObservableObject
     {
+        private readonly IHttpClient _httpClient;
         private ServiceConfiguration Configuration { get; }
 
-        public ServiceEndpointAction(ServiceConfiguration configuration)
+        public ServiceEndpointAction(ServiceConfiguration configuration, IHttpClient httpClient)
         {
+            _httpClient = httpClient;
             Configuration = configuration;
             InvokeUriCommand = new RelayCommand(async () =>
             {
@@ -24,59 +23,19 @@ namespace Rester.Model
                 ((RelayCommand)InvokeUriCommand).RaiseCanExecuteChanged();
                 try
                 {
-                    var watch = new Stopwatch();
-                    watch.Start();
-                    HttpResponseMessage result = await InvokeUriAsync();
-                    var content = await result.Content.ReadAsStringAsync();
-                    watch.Stop();
-                    SendResponseNotificationMessage(result, content, watch.Elapsed);
+                    var response = await _httpClient.InvokeRestAction(this);
+                    Messenger.Default.Send(new NotificationMessage<HttpResponse>(response, "Service Endpoint Action Result"));
                 }
                 catch (Exception ex)
                 {
-                    await new MessageDialog($"Something bad happended: {ex.Message}").ShowAsync();
+                    await new MessageDialog($"Something bad happended: {ex.Message}").ShowAsync(); //TODO: Move dialog call to somewhere else
                 }
                 Processing = false;
                 ((RelayCommand)InvokeUriCommand).RaiseCanExecuteChanged();
             }, () => !Processing);
         }
 
-        private void SendResponseNotificationMessage(HttpResponseMessage result, string content, TimeSpan timeToResponse)
-        {
-            var messageContent = new HttpResponse
-            {
-                StatusCode = (int) result.StatusCode,
-                ReasonPhrase = result.ReasonPhrase,
-                Content = content.Trim(),
-                TimeToResponse = timeToResponse,
-                Uri = Uri.AbsoluteUri,
-                Method = Method,
-                CallTime = DateTime.Now,
-                IsSuccessfulStatusCode = result.IsSuccessStatusCode
-            };
-            Messenger.Default.Send(new NotificationMessage<HttpResponse>(messageContent, "Service Endpoint Action Result"));
-        }
-
-        private Uri Uri => new Uri(new Uri(Configuration.BaseUri), UriPath);
-
-        private async Task<HttpResponseMessage> InvokeUriAsync()
-        {
-            using (var client = new HttpClient())
-            {
-                switch (Method.ToLower())
-                {
-                    case "get":
-                        return await client.GetAsync(Uri);
-                    case "put":
-                        return await client.PutAsync(Uri, new StringContent(Body, Encoding.UTF8, MediaType));
-                    case "post":
-                        return await client.PostAsync(Uri, new StringContent(Body, Encoding.UTF8, MediaType));
-                    case "delete":
-                        return await client.DeleteAsync(Uri);
-                    default:
-                        throw new ArgumentException($"Encountered unknown http method {Method}");
-                }
-            }
-        }
+        public Uri Uri => new Uri(new Uri(Configuration.BaseUri), UriPath);
 
         public string UriPath { get { return _uriPath; } set { Set(nameof(UriPath), ref _uriPath, value); } }
         private string _uriPath;
@@ -93,8 +52,7 @@ namespace Rester.Model
         public string MediaType { get { return _mediaType; } set { Set(nameof(MediaType), ref _mediaType, value); } }
         private string _mediaType;
 
-        public bool Processing { get { return _processing; } private set { Set(nameof(Processing), ref _processing, value); } }
-        private bool _processing;
+        private bool Processing { get; set; }
 
         public ICommand InvokeUriCommand { get; }
     }

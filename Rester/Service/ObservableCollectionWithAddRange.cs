@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-namespace Rester.ViewModel
+namespace Rester.Service
 {
-    public class ObservableCollection2<T> : ObservableCollection<T>
+    public class ObservableCollectionWithAddRange<T> : ObservableCollection<T>
     {
         public void AddRange(IEnumerable<T> items)
         {

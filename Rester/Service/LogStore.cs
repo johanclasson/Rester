@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Rester.Model;
-using System.Collections.Generic;
 
-namespace Rester.ViewModel
+namespace Rester.Service
 {
     internal class LogStore : ILogStore
     {

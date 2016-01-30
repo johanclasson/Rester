@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
+using Rester.Service;
 
 namespace Rester.ViewModel
 {
@@ -15,6 +16,7 @@ namespace Rester.ViewModel
 
             SimpleIoc.Default.Register(() => navigationService);
             SimpleIoc.Default.Register<IDialogService, DialogService>();
+            SimpleIoc.Default.Register<IHttpClient, HttpClientFactory>();
 
             if (ViewModelBase.IsInDesignModeStatic)
             {

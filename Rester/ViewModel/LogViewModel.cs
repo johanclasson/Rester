@@ -1,6 +1,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using Rester.Model;
+using Rester.Service;
 
 namespace Rester.ViewModel
 {
@@ -28,7 +29,7 @@ namespace Rester.ViewModel
             LogEntries.ClearAndAddRange(entries);
         }
 
-        public ObservableCollection2<HttpResponse> LogEntries { get; } = new ObservableCollection2<HttpResponse>();
+        public ObservableCollectionWithAddRange<HttpResponse> LogEntries { get; } = new ObservableCollectionWithAddRange<HttpResponse>();
 
         public bool ShowOnlyFromToday
         {
