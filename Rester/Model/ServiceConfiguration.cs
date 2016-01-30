@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Rester.Service;
 using Rester.ViewModel;
 
 namespace Rester.Model
@@ -7,7 +8,7 @@ namespace Rester.Model
     {
         public ServiceConfiguration()
         {
-            Endpoints = new ObservableCollection2<ServiceEndpoint>();
+            Endpoints = new ObservableCollectionWithAddRange<ServiceEndpoint>();
         }
 
         public string BaseUri { get { return _baseUri; } set { Set(nameof(BaseUri), ref _baseUri, value); } }
@@ -16,6 +17,6 @@ namespace Rester.Model
         public string Name { get { return _name; } set { Set(nameof(Name), ref _name, value); } }
         private string _name;
 
-        public ObservableCollection2<ServiceEndpoint> Endpoints { get; }
+        public ObservableCollectionWithAddRange<ServiceEndpoint> Endpoints { get; }
     }
 }

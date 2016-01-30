@@ -98,9 +98,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ColumnWrapPanel.cs" />
-    <Compile Include="Converters\BooleanToGreenOrRedConverter.cs" />
-    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Control\ColumnWrapPanel.cs" />
+    <Compile Include="Converter\BooleanToGreenOrRedConverter.cs" />
+    <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="LogPage.xaml.cs">
       <DependentUpon>LogPage.xaml</DependentUpon>
     </Compile>
@@ -112,11 +112,12 @@
     <Compile Include="Model\ServiceEndpoint.cs" />
     <Compile Include="Model\ServiceEndpointAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModel\LogStore.cs" />
+    <Compile Include="Service\LogStore.cs" />
+    <Compile Include="Service\ObservableCollectionWithAddRange.cs" />
+    <Compile Include="Service\ServiceEndpointAction.cs" />
+    <Compile Include="Service\ServiceStore.cs" />
     <Compile Include="ViewModel\LogViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ObservableCollection2.cs" />
-    <Compile Include="ViewModel\ServiceStore.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>

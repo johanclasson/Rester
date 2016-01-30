@@ -3,7 +3,7 @@ using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 
-namespace Rester.Controls
+namespace Rester.Control
 {
     public class ColumnWrapPanel : Panel
     {

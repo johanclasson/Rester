@@ -1,18 +1,16 @@
 ﻿using System;
-using Windows.UI.Xaml;
+using Windows.UI;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
-namespace Rester.Converters
+namespace Rester.Converter
 {
-    internal class BooleanToVisibilityConverter : IValueConverter
+    internal class BooleanToGreenOrRedConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            bool invert = parameter as string == "invert";
             bool result = value is bool && (bool)value;
-            if (invert)
-                result = !result;
-            return result ? Visibility.Visible : Visibility.Collapsed;
+            return new SolidColorBrush(result ? Colors.Green : Colors.Red);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

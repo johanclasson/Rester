@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using GalaSoft.MvvmLight.Ioc;
 using Rester.Model;
 
-namespace Rester.ViewModel
+namespace Rester.Service
 {
     internal class ServiceStore : IServiceStore
     {
@@ -32,13 +33,13 @@ namespace Rester.ViewModel
             };
             ServiceEndpointAction[] actions =
             {
-                new ServiceEndpointAction(configuration)
+                new ServiceEndpointAction(configuration, HttpClient)
                 {
                     Name = "På",
                     UriPath = "json.htm?type=command&param=switchlight&idx=1&switchcmd=On",
                     Method = "Get"
                 },
-                new ServiceEndpointAction(configuration)
+                new ServiceEndpointAction(configuration, HttpClient)
                 {
                     Name = "Av",
                     UriPath = "json.htm?type=command&param=switchlight&idx=1&switchcmd=Off",
@@ -56,6 +57,8 @@ namespace Rester.ViewModel
             configuration.Endpoints.AddRange(endpoints);
             return configuration;
         }
+
+        private static IHttpClient HttpClient => SimpleIoc.Default.GetInstance<IHttpClient>();
 
         private static ServiceConfiguration CreateServiceConfiguration(int i)
         {
@@ -81,7 +84,7 @@ namespace Rester.ViewModel
 
         private static ServiceEndpointAction CreateAction(int i, ServiceConfiguration configuration)
         {
-            return new ServiceEndpointAction(configuration)
+            return new ServiceEndpointAction(configuration, HttpClient)
             {
                 Name = $"Action {i}",
                 UriPath = "dostuff?a=b&c=d"

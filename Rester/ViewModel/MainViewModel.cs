@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using Rester.Model;
+using Rester.Service;
 
 namespace Rester.ViewModel
 {
@@ -27,7 +28,7 @@ namespace Rester.ViewModel
             ServiceConfigurations.ClearAndAddRange(configs);
         }
 
-        public ObservableCollection2<ServiceConfiguration> ServiceConfigurations { get; } = new ObservableCollection2<ServiceConfiguration>();
+        public ObservableCollectionWithAddRange<ServiceConfiguration> ServiceConfigurations { get; } = new ObservableCollectionWithAddRange<ServiceConfiguration>();
 
         public bool EditMode { get { return _editMode; } set { Set(nameof(EditMode), ref _editMode, value); } }
         private bool _editMode;
