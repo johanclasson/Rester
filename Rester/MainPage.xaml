@@ -15,21 +15,29 @@
         </DataTemplate>
         <DataTemplate x:Key="ServiceEndpointTemplate">
             <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                <StackPanel Orientation="Horizontal" CornerRadius="5" Background="{ThemeResource ContentDialogBorderThemeBrush}" >
-                    <SymbolIcon Symbol="{Binding Symbol}" Margin="5" />
-                    <TextBlock Text="{Binding Name}" Style="{StaticResource BaseTextBlockStyle}" Margin="5"/>
-                </StackPanel>
+                <Grid CornerRadius="5" Background="{ThemeResource ContentDialogBorderThemeBrush}">
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="{Binding Name}"
+                                   Style="{StaticResource BaseTextBlockStyle}" Margin="10,5,5,5"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}">
+                        <Button>
+                            <SymbolIcon Symbol="Delete" />
+                        </Button>
+                        <TextBox Text="{Binding Name, Mode=TwoWay}"/>
+                    </StackPanel>
+                </Grid>
                 <GridView ItemTemplate="{StaticResource ServiceEndpointActionTemplate}" ItemsSource="{Binding Actions}" Margin="5,0,0,-24" VerticalAlignment="Center">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <ItemsWrapGrid Orientation="Horizontal" />
+                            <ItemsWrapGrid Orientation="Horizontal" Margin="0,0,1,0" />
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                 </GridView>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="ServiceConfigurationTemplate">
-            <StackPanel Margin="0,20,0,0" Padding="10"
+            <StackPanel Margin="0,20,0,0" Padding="9,10,10,10"
                   BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
                   BorderThickness="2" CornerRadius="5">
                 <TextBlock Text="{Binding Name}" Style="{StaticResource TitleTextBlockStyle}" Foreground="{ThemeResource ContentDialogBorderThemeBrush}" FontWeight="Bold"/>

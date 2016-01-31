@@ -1,10 +1,8 @@
-﻿using GalaSoft.MvvmLight;
-using Rester.Service;
-using Rester.ViewModel;
+﻿using Rester.Service;
 
 namespace Rester.Model
 {
-    internal class ServiceConfiguration : ObservableObject
+    internal class ServiceConfiguration : AbstractResterModel
     {
         public ServiceConfiguration()
         {
