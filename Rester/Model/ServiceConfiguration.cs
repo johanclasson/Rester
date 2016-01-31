@@ -1,4 +1,6 @@
-﻿using Rester.Service;
+﻿using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
+using Rester.Service;
 
 namespace Rester.Model
 {
@@ -7,6 +9,7 @@ namespace Rester.Model
         public ServiceConfiguration()
         {
             Endpoints = new ObservableCollectionWithAddRange<ServiceEndpoint>();
+            AddEndpointCommand = new RelayCommand(() => { Endpoints.Add(new ServiceEndpoint(EditMode)); });
         }
 
         public string BaseUri { get { return _baseUri; } set { Set(nameof(BaseUri), ref _baseUri, value); } }
@@ -16,5 +19,6 @@ namespace Rester.Model
         private string _name;
 
         public ObservableCollectionWithAddRange<ServiceEndpoint> Endpoints { get; }
+        public ICommand AddEndpointCommand { get; }
     }
 }
