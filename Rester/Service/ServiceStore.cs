@@ -45,12 +45,11 @@ namespace Rester.Service
                     Method = "Get"
                 }
             };
+            var serviceEndpoint = new ServiceEndpoint {Name = "Matrummet"};
+            serviceEndpoint.Actions.AddRange(actions);
             ServiceEndpoint[] endpoints =
             {
-                new ServiceEndpoint(actions)
-                {
-                    Name = "Matrummet"
-                }
+                serviceEndpoint
             };
             configuration.Endpoints.AddRange(endpoints);
             return configuration;
@@ -73,10 +72,9 @@ namespace Rester.Service
 
         private static ServiceEndpoint CreateEndpoint(IEnumerable<ServiceEndpointAction> actions, int i)
         {
-            return new ServiceEndpoint(actions)
-            {
-                Name = $"Endpoint {i}"
-            };
+            var serviceEndpoint = new ServiceEndpoint { Name = $"Endpoint {i}" };
+            serviceEndpoint.Actions.AddRange(actions);
+            return serviceEndpoint;
         }
 
         private static ServiceEndpointAction CreateAction(int i, ServiceConfiguration configuration)

@@ -6,6 +6,11 @@ namespace Rester.Model
 {
     internal abstract class AbstractResterModel : ObservableObject
     {
+        public AbstractResterModel(bool editMode) : this()
+        {
+            _editMode = editMode;
+        }
+
         public AbstractResterModel()
         {
             Messenger.Default.Register<EditModeChangedMessage>(this, message => EditMode = message.Content);
