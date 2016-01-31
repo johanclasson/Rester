@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Ioc;
 using Rester.Model;
 
@@ -50,8 +49,7 @@ namespace Rester.Service
             {
                 new ServiceEndpoint(actions)
                 {
-                    Name = "Matrummet",
-                    Symbol = Symbol.Flag
+                    Name = "Matrummet"
                 }
             };
             configuration.Endpoints.AddRange(endpoints);
@@ -77,7 +75,6 @@ namespace Rester.Service
         {
             return new ServiceEndpoint(actions)
             {
-                Symbol =  Symbol.Clock,
                 Name = $"Endpoint {i}"
             };
         }

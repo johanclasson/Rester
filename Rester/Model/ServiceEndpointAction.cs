@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Windows.Input;
 using Windows.UI.Popups;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Rester.Service;
 
 namespace Rester.Model
 {
-    internal class ServiceEndpointAction : ObservableObject
+    internal class ServiceEndpointAction : AbstractResterModel
     {
         private readonly IHttpClient _httpClient;
         private ServiceConfiguration Configuration { get; }

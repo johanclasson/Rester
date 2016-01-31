@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Windows.UI.Xaml.Controls;
-using GalaSoft.MvvmLight;
 
 namespace Rester.Model
 {
-    internal class ServiceEndpoint : ObservableObject
+    internal class ServiceEndpoint : AbstractResterModel
     {
         public ServiceEndpoint()
         {
@@ -16,9 +14,6 @@ namespace Rester.Model
         {
             Actions = new ObservableCollection<ServiceEndpointAction>(actions);
         }
-
-        public Symbol Symbol { get { return _symbol; } set { Set(nameof(Symbol), ref _symbol, value); } }
-        private Symbol _symbol;
 
         public string Name { get { return _name; } set { Set(nameof(Name), ref _name, value); } }
         private string _name;

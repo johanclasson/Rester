@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
 using Rester.Model;
 using Rester.Service;
@@ -30,7 +31,19 @@ namespace Rester.ViewModel
 
         public ObservableCollectionWithAddRange<ServiceConfiguration> ServiceConfigurations { get; } = new ObservableCollectionWithAddRange<ServiceConfiguration>();
 
-        public bool EditMode { get { return _editMode; } set { Set(nameof(EditMode), ref _editMode, value); } }
+        public bool EditMode
+        {
+            get
+            {
+                return _editMode;
+            }
+            set
+            {
+                Set(nameof(EditMode), ref _editMode, value);
+                Messenger.Default.Send(new EditModeChangedMessage(value));
+            }
+        }
+
         private bool _editMode;
 
         public ICommand NavigateToLogCommand { get; }

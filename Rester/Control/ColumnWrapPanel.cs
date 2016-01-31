@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Rester.Control
 {
-    public class ColumnWrapPanel : Panel
+    internal class ColumnWrapPanel : Panel
     {
         public int ColumnTargetSize { get; set; } = 300;
 
