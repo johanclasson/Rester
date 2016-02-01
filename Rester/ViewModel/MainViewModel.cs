@@ -12,16 +12,19 @@ namespace Rester.ViewModel
     {
         private readonly IServiceStore _serviceStore;
         private readonly INavigationService _navigationService;
+        private readonly IActionInvokerFactory _invokerFactory;
 
-        public MainViewModel(IServiceStore serviceStore, INavigationService navigationService)
+        public MainViewModel(IServiceStore serviceStore, INavigationService navigationService, IActionInvokerFactory invokerFactory)
         {
             _serviceStore = serviceStore;
             _navigationService = navigationService; //For some reason, the navigation does not work if not kept as a member
+            _invokerFactory = invokerFactory;
             LoadData();
             NavigateToLogCommand = new RelayCommand(() => _navigationService.NavigateTo(LogPage.Key));
             EditModeCommand = new RelayCommand(() => EditMode = true);
             EditCompletedCommand = new RelayCommand(() => EditMode = false); //TODO: Save to store now or on every change?
             DeleteConfigurationCommand = new RelayCommand<ServiceConfiguration>(configuration => ServiceConfigurations.Remove(configuration));
+            AddConfigurationCommand = new RelayCommand(() => ServiceConfigurations.Add(new ServiceConfiguration(_invokerFactory, EditMode)));
         }
 
         private async void LoadData()
@@ -51,5 +54,6 @@ namespace Rester.ViewModel
         public ICommand EditModeCommand { get; }
         public ICommand EditCompletedCommand { get; }
         public ICommand DeleteConfigurationCommand { get; }
+        public ICommand AddConfigurationCommand { get; }
     }
 }

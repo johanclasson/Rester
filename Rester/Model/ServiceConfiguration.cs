@@ -11,7 +11,7 @@ namespace Rester.Model
     {
         private readonly IActionInvokerFactory _invokerFactory;
 
-        public ServiceConfiguration(IActionInvokerFactory invokerFactory)
+        public ServiceConfiguration(IActionInvokerFactory invokerFactory, bool editMode = false) : base(editMode)
         {
             _invokerFactory = invokerFactory;
             Endpoints = new ObservableCollectionWithAddRange<ServiceEndpoint>();
