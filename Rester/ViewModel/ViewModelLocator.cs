@@ -16,7 +16,7 @@ namespace Rester.ViewModel
 
             SimpleIoc.Default.Register(() => navigationService);
             SimpleIoc.Default.Register<IDialogService, DialogService>();
-            SimpleIoc.Default.Register<IHttpClient, HttpClientFactory>();
+            SimpleIoc.Default.Register<IActionInvokerFactory, ActionInvokerFactory>();
 
             if (ViewModelBase.IsInDesignModeStatic)
             {

@@ -116,7 +116,7 @@
     <Compile Include="Service\EditmodeChangedMessage.cs" />
     <Compile Include="Service\LogStore.cs" />
     <Compile Include="Service\ObservableCollectionWithAddRange.cs" />
-    <Compile Include="Service\ServiceEndpointAction.cs" />
+    <Compile Include="Service\HttpClient.cs" />
     <Compile Include="Service\ServiceStore.cs" />
     <Compile Include="ViewModel\LogViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
