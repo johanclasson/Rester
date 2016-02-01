@@ -7,14 +7,16 @@ namespace Rester.Model
 {
     internal class ServiceEndpoint : AbstractResterModel
     {
+        private readonly ServiceConfiguration _configuration;
         private readonly INavigationService _navigationService;
 
-        public ServiceEndpoint(INavigationService navigationService, bool editMode = false) : base(editMode)
+        public ServiceEndpoint(ServiceConfiguration configuration, INavigationService navigationService, bool editMode = false) : base(editMode)
         {
+            _configuration = configuration;
             _navigationService = navigationService;
             AddActionCommand = new RelayCommand(() =>
             {
-                var action = new ServiceEndpointAction(EditMode)
+                var action = new ServiceEndpointAction(() => _configuration.BaseUri, EditMode)
                 {
                     MediaType = "application/json",
                     Method = "Get"

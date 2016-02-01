@@ -49,7 +49,14 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" />
                 <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" />
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Path:" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding UriPath, Mode=TwoWay}" />
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding BaseUri}" Margin="0,0,0,0"/>
+                    <TextBox Grid.Column="1" Text="{Binding UriPath, Mode=TwoWay}" />
+                </Grid>
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Method:" />
                 <ComboBox Grid.Row="4" Grid.Column="1" SelectedValue="{Binding Method, Mode=TwoWay}"
                           SelectedValuePath="Content">

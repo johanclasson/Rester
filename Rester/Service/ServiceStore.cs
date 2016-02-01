@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,20 +34,20 @@ namespace Rester.Service
             };
             ServiceEndpointAction[] actions =
             {
-                new ServiceEndpointAction
+                new ServiceEndpointAction(() => configuration.BaseUri)
                 {
                     Name = "På",
-                    UriPath = "json.htm?type=command&param=switchlight&idx=1&switchcmd=On",
+                    UriPath = "json.htm?type=command&param=switchlight&idx=1&switchcmd=Set%20Level&level=15",
                     Method = "Get"
                 },
-                new ServiceEndpointAction
+                new ServiceEndpointAction(() => configuration.BaseUri)
                 {
                     Name = "Av",
                     UriPath = "json.htm?type=command&param=switchlight&idx=1&switchcmd=Off",
                     Method = "Get"
                 }
             };
-            var serviceEndpoint = new ServiceEndpoint(NavigationService) {Name = "Matrummet"};
+            var serviceEndpoint = new ServiceEndpoint(configuration, NavigationService) {Name = "Matrummet"};
             serviceEndpoint.Actions.AddRange(actions);
             ServiceEndpoint[] endpoints =
             {
@@ -66,22 +67,22 @@ namespace Rester.Service
                 Name = $"Service Config {i}",
                 BaseUri = "http://myserviceurl:1234"
             };
-            var actions = Enumerable.Range(0, 7).Select(CreateAction);
-            var endpoints = Enumerable.Range(0, 6).Select(j => CreateEndpoint(actions, j));
+            var actions = Enumerable.Range(0, 7).Select(j => CreateAction(() => configuration.BaseUri, j));
+            var endpoints = Enumerable.Range(0, 6).Select(k => CreateEndpoint(configuration, actions, k));
             configuration.Endpoints.AddRange(endpoints);
             return configuration;
         }
 
-        private static ServiceEndpoint CreateEndpoint(IEnumerable<ServiceEndpointAction> actions, int i)
+        private static ServiceEndpoint CreateEndpoint(ServiceConfiguration configuration, IEnumerable<ServiceEndpointAction> actions, int i)
         {
-            var serviceEndpoint = new ServiceEndpoint(NavigationService) { Name = $"Endpoint {i}" };
+            var serviceEndpoint = new ServiceEndpoint(configuration, NavigationService) { Name = $"Endpoint {i}" };
             serviceEndpoint.Actions.AddRange(actions);
             return serviceEndpoint;
         }
 
-        private static ServiceEndpointAction CreateAction(int i)
+        private static ServiceEndpointAction CreateAction(Func<string> configuration, int i)
         {
-            return new ServiceEndpointAction
+            return new ServiceEndpointAction(configuration)
             {
                 Name = $"Action {i}",
                 UriPath = "dostuff?a=b&c=d",
