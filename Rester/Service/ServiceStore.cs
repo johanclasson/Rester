@@ -25,20 +25,20 @@ namespace Rester.Service
 
         private ServiceConfiguration CreateRealTestData()
         {
-            var configuration = new ServiceConfiguration
+            var configuration = new ServiceConfiguration(ActionInvokerFactory)
             {
                 Name = "Domoticz",
                 BaseUri = "http://mediamonstret:8070"
             };
             ServiceEndpointAction[] actions =
             {
-                new ServiceEndpointAction(configuration, HttpClient)
+                new ServiceEndpointAction
                 {
                     Name = "På",
                     UriPath = "json.htm?type=command&param=switchlight&idx=1&switchcmd=On",
                     Method = "Get"
                 },
-                new ServiceEndpointAction(configuration, HttpClient)
+                new ServiceEndpointAction
                 {
                     Name = "Av",
                     UriPath = "json.htm?type=command&param=switchlight&idx=1&switchcmd=Off",
@@ -55,17 +55,17 @@ namespace Rester.Service
             return configuration;
         }
 
-        private static IHttpClient HttpClient => SimpleIoc.Default.GetInstance<IHttpClient>();
+        private static IActionInvokerFactory ActionInvokerFactory => SimpleIoc.Default.GetInstance<IActionInvokerFactory>();
 
         private static ServiceConfiguration CreateServiceConfiguration(int i)
         {
-            var configuration = new ServiceConfiguration()
+            var configuration = new ServiceConfiguration(ActionInvokerFactory)
             {
                 Name = $"Service Config {i}",
                 BaseUri = "http://myserviceurl:1234"
             };
-            var actions = Enumerable.Range(0, 7).Select(j => CreateAction(j, configuration));
-            var endpoints = Enumerable.Range(0, 6).Select(k => CreateEndpoint(actions, k));
+            var actions = Enumerable.Range(0, 7).Select(CreateAction);
+            var endpoints = Enumerable.Range(0, 6).Select(j => CreateEndpoint(actions, j));
             configuration.Endpoints.AddRange(endpoints);
             return configuration;
         }
@@ -77,12 +77,15 @@ namespace Rester.Service
             return serviceEndpoint;
         }
 
-        private static ServiceEndpointAction CreateAction(int i, ServiceConfiguration configuration)
+        private static ServiceEndpointAction CreateAction(int i)
         {
-            return new ServiceEndpointAction(configuration, HttpClient)
+            return new ServiceEndpointAction
             {
                 Name = $"Action {i}",
-                UriPath = "dostuff?a=b&c=d"
+                UriPath = "dostuff?a=b&c=d",
+                Method = "Get",
+                Body = "",
+                MediaType = ""
             };
         }
     }
