@@ -7,7 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    DataContext="{Binding Main, Source={StaticResource Locator}}">
+    DataContext="{Binding Main, Source={StaticResource Locator}}"
+    Name="Main">
     <Page.Resources>
         <coverters:BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
@@ -33,16 +34,47 @@
         <ListView.ItemTemplate>
             <DataTemplate>
                 <!-- Service Configuration -->
-                <StackPanel Margin="0,20,0,0" Padding="9,10,10,10"
-                  BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
-                  BorderThickness="2" CornerRadius="5"
+                <Grid Margin="0,20,0,0" Padding="9,10,10,10"
+                            BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
+                            BorderThickness="2" CornerRadius="5"
                             Name="ServiceConfiguration">
-                    <TextBlock Text="{Binding Name}"
-                           Style="{StaticResource TitleTextBlockStyle}"
-                           Foreground="{ThemeResource ContentDialogBorderThemeBrush}"
-                           FontWeight="Bold"/>
-                    <TextBlock Text="{Binding BaseUri}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="0,0,0,15"/>
-                    <ListView ItemsSource="{Binding Endpoints}"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="0,0,0,15">
+                        <StackPanel Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="{Binding Name}"
+                                       Style="{StaticResource TitleTextBlockStyle}"
+                                       Foreground="{ThemeResource ContentDialogBorderThemeBrush}"
+                                       FontWeight="Bold"/>
+                            <TextBlock Text="{Binding BaseUri}"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   TextWrapping="NoWrap"/>
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}">
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Text="{Binding Name, Mode=TwoWay}" />
+                                <!-- Binding to Main -->
+                                <Button Grid.Column="1"
+                                    Command="{Binding DataContext.DeleteConfigurationCommand, ElementName=Main}"
+                                    CommandParameter="{Binding}"
+                                    Background="{ThemeResource ContentDialogBorderThemeBrush}">
+                                    <SymbolIcon Symbol="Delete" />
+                                </Button>
+                            </Grid>
+                            <TextBox Text="{Binding BaseUri, Mode=TwoWay}" />
+                        </StackPanel>
+                    </Grid>
+                    <ListView Grid.Row="1" ItemsSource="{Binding Endpoints}"
                           SelectionMode="None"
                           IsItemClickEnabled="False">
                         <ListView.ItemTemplate>
@@ -51,17 +83,27 @@
                                 <StackPanel Orientation="Vertical" Margin="0,0,0,10"
                                             Name="Endpoint">
                                     <Grid CornerRadius="5" Background="{ThemeResource ContentDialogBorderThemeBrush}">
-                                        <StackPanel Orientation="Horizontal" Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}">
-                                            <TextBlock Text="{Binding Name}"
-                                   Style="{StaticResource BaseTextBlockStyle}" Margin="10,5,5,5"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}">
-                                            <Button Command="{Binding DataContext.DeleteEndpointCommand, ElementName=ServiceConfiguration}"
-                                                    CommandParameter="{Binding}"><!-- Binding to Service Configuration -->
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Name}"
+                                                   Style="{StaticResource BaseTextBlockStyle}"
+                                                   Margin="10,5,5,5"
+                                                   Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}"/>
+                                        <Grid Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Binding to Service Configuration -->
+                                            <TextBox Grid.Column="0" Text="{Binding Name, Mode=TwoWay}"/>
+                                            <Button Grid.Column="1"
+                                                    Command="{Binding DataContext.DeleteEndpointCommand, ElementName=ServiceConfiguration}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="{ThemeResource ContentDialogBorderThemeBrush}">
                                                 <SymbolIcon Symbol="Delete" />
                                             </Button>
-                                            <TextBox Text="{Binding Name, Mode=TwoWay}"/>
-                                        </StackPanel>
+                                        </Grid>
                                     </Grid>
                                     <GridView ItemsSource="{Binding Actions}"
                                               Margin="5,0,0,-24" VerticalAlignment="Center">
@@ -74,12 +116,14 @@
                                             <DataTemplate>
                                                 <!-- Service Action -->
                                                 <StackPanel Orientation="Horizontal">
+                                                    <!-- Binding to Service Configuration -->
                                                     <Button Content="{Binding Name}"
                                                         Command="{Binding DataContext.InvokeUriCommand, ElementName=ServiceConfiguration}"
-                                                        CommandParameter="{Binding}"/><!-- Binding to Service Configuration -->
+                                                        CommandParameter="{Binding}"/>
                                                     <Button Command="{Binding DataContext.DeleteActionCommand, ElementName=Endpoint}"
                                                             CommandParameter="{Binding}"
-                                                            Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}">
+                                                            Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}"
+                                                            Background="{ThemeResource ContentDialogBorderThemeBrush}">
                                                         <SymbolIcon Symbol="Delete"/>
                                                     </Button>
                                                 </StackPanel>
@@ -94,14 +138,15 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <Button Content="Add Endpoint"
+                    <Button Grid.Row="2" Content="Add Endpoint"
                         Background="{ThemeResource ContentDialogBorderThemeBrush}"
                         HorizontalAlignment="Right"
                         Margin="0,30,14,0"
                         Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}"
                         Command="{Binding AddEndpointCommand}"/>
-                </StackPanel>
+                </Grid>
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>
 </Page>
+
