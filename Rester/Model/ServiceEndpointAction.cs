@@ -5,9 +5,10 @@ namespace Rester.Model
 {
     internal class ServiceEndpointAction : AbstractResterModel
     {
+#if DEBUG
+        [Obsolete("Constructor is only present for design purposes")]
         public ServiceEndpointAction()
         {
-#if DEBUG
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 Name = "My name";
@@ -16,12 +17,14 @@ namespace Rester.Model
                 MediaType = "application/json";
                 Method = "Post";
                 UriPath = "mypath/jadda/jadda";
+                GetBaseUri = () => "http://myservice.com:1234";
             }
-#endif
         }
+#endif
 
-        public ServiceEndpointAction(bool editMode = false) : base(editMode)
+        public ServiceEndpointAction(Func<string> getBaseUri, bool editMode = false) : base(editMode)
         {
+            GetBaseUri = getBaseUri;
         }
 
         public string UriPath { get { return _uriPath; } set { Set(nameof(UriPath), ref _uriPath, value); } }
@@ -40,5 +43,18 @@ namespace Rester.Model
         private string _mediaType;
 
         public bool Processing { get; set; }
+
+        private Func<string> GetBaseUri { get; }
+
+        public string BaseUri
+        {
+            get
+            {
+                string baseUri = GetBaseUri().Trim();
+                if (baseUri.EndsWith("/"))
+                    return baseUri;
+                return baseUri + "/";
+            }
+        }
     }
 }

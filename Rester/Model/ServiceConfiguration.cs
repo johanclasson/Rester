@@ -18,7 +18,7 @@ namespace Rester.Model
             _navigationService = navigationService;
             _invokerFactory = invokerFactory;
             Endpoints = new ObservableCollectionWithAddRange<ServiceEndpoint>();
-            AddEndpointCommand = new RelayCommand(() => { Endpoints.Add(new ServiceEndpoint(_navigationService, EditMode)); });
+            AddEndpointCommand = new RelayCommand(() => { Endpoints.Add(new ServiceEndpoint(this, _navigationService, EditMode)); });
             InvokeUriCommand = new RelayCommand<ServiceEndpointAction>(async action =>
             {
                 if (EditMode)
