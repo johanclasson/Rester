@@ -24,7 +24,7 @@ namespace Rester.ViewModel
             EditModeCommand = new RelayCommand(() => EditMode = true);
             EditCompletedCommand = new RelayCommand(() => EditMode = false); //TODO: Save to store now or on every change?
             DeleteConfigurationCommand = new RelayCommand<ServiceConfiguration>(configuration => ServiceConfigurations.Remove(configuration));
-            AddConfigurationCommand = new RelayCommand(() => ServiceConfigurations.Add(new ServiceConfiguration(_invokerFactory, EditMode)));
+            AddConfigurationCommand = new RelayCommand(() => ServiceConfigurations.Add(new ServiceConfiguration(_navigationService, _invokerFactory, EditMode)));
         }
 
         private async void LoadData()
