@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Views;
 using Rester.Model;
 
 namespace Rester.Service
@@ -25,7 +26,7 @@ namespace Rester.Service
 
         private ServiceConfiguration CreateRealTestData()
         {
-            var configuration = new ServiceConfiguration(ActionInvokerFactory)
+            var configuration = new ServiceConfiguration(NavigationService, ActionInvokerFactory)
             {
                 Name = "Domoticz",
                 BaseUri = "http://mediamonstret:8070"
@@ -45,7 +46,7 @@ namespace Rester.Service
                     Method = "Get"
                 }
             };
-            var serviceEndpoint = new ServiceEndpoint {Name = "Matrummet"};
+            var serviceEndpoint = new ServiceEndpoint(NavigationService) {Name = "Matrummet"};
             serviceEndpoint.Actions.AddRange(actions);
             ServiceEndpoint[] endpoints =
             {
@@ -56,10 +57,11 @@ namespace Rester.Service
         }
 
         private static IActionInvokerFactory ActionInvokerFactory => SimpleIoc.Default.GetInstance<IActionInvokerFactory>();
+        private static INavigationService NavigationService => SimpleIoc.Default.GetInstance<INavigationService>();
 
         private static ServiceConfiguration CreateServiceConfiguration(int i)
         {
-            var configuration = new ServiceConfiguration(ActionInvokerFactory)
+            var configuration = new ServiceConfiguration(NavigationService, ActionInvokerFactory)
             {
                 Name = $"Service Config {i}",
                 BaseUri = "http://myserviceurl:1234"
@@ -72,7 +74,7 @@ namespace Rester.Service
 
         private static ServiceEndpoint CreateEndpoint(IEnumerable<ServiceEndpointAction> actions, int i)
         {
-            var serviceEndpoint = new ServiceEndpoint { Name = $"Endpoint {i}" };
+            var serviceEndpoint = new ServiceEndpoint(NavigationService) { Name = $"Endpoint {i}" };
             serviceEndpoint.Actions.AddRange(actions);
             return serviceEndpoint;
         }

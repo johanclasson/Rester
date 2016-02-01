@@ -1,0 +1,81 @@
+﻿<Page
+    x:Class="Rester.ActionPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:model="using:Rester.Model"
+    xmlns:converter="using:Rester.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=model:ServiceEndpointAction, IsDesignTimeCreatable=True}">
+    <Page.Resources>
+        <converter:DataRestMethodToVisibilityConverter x:Key="RestMethodToVis" />
+    </Page.Resources>
+    <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10,10,10,20">
+                <SymbolIcon Symbol="Edit"
+                            Foreground="{ThemeResource ContentDialogBorderThemeBrush}"
+                            Margin="0,0,10,0" />
+                <TextBlock Text="Action"
+                           Style="{StaticResource TitleTextBlockStyle}"
+                           Foreground="{ThemeResource ContentDialogBorderThemeBrush}"
+                           FontWeight="Bold" />
+            </StackPanel>
+            <Grid Margin="10">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="0,0,10,0" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="10" />
+                    <RowDefinition />
+                    <RowDefinition Height="10" />
+                    <RowDefinition />
+                    <RowDefinition Height="10" />
+                    <RowDefinition />
+                    <RowDefinition Height="10" />
+                    <RowDefinition />
+                    <RowDefinition Height="10" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Path:" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding UriPath, Mode=TwoWay}" />
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Method:" />
+                <ComboBox Grid.Row="4" Grid.Column="1" SelectedValue="{Binding Method, Mode=TwoWay}"
+                          SelectedValuePath="Content">
+                    <ComboBoxItem Name="Get">Get</ComboBoxItem>
+                    <ComboBoxItem Name="Put">Put</ComboBoxItem>
+                    <ComboBoxItem Name="Post">Post</ComboBoxItem>
+                    <ComboBoxItem Name="Delete">Delete</ComboBoxItem>
+                </ComboBox>
+                <TextBlock Grid.Row="6" Grid.Column="0"
+                           Text="Content Type:"
+                           Visibility="{Binding Method, Converter={StaticResource RestMethodToVis}}" />
+                <TextBox Grid.Row="6" Grid.Column="1"
+                         Text="{Binding MediaType, Mode=TwoWay}"
+                         Visibility="{Binding Method, Converter={StaticResource RestMethodToVis}}"/>
+                <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2"
+                            Visibility="{Binding Method, Converter={StaticResource RestMethodToVis}}">
+                    <TextBlock Text="Body:" />
+                    <Grid BorderThickness="2"
+                          BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
+                          CornerRadius="5">
+                        <TextBox Text="{Binding Body, Mode=TwoWay}"
+                                 TextWrapping="NoWrap"
+                                 AcceptsReturn="True" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

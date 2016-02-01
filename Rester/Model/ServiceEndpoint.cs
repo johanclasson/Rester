@@ -1,17 +1,26 @@
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
 using Rester.Service;
 
 namespace Rester.Model
 {
     internal class ServiceEndpoint : AbstractResterModel
     {
-        public ServiceEndpoint(bool editMode = false) : base(editMode)
+        private readonly INavigationService _navigationService;
+
+        public ServiceEndpoint(INavigationService navigationService, bool editMode = false) : base(editMode)
         {
+            _navigationService = navigationService;
             AddActionCommand = new RelayCommand(() =>
             {
-                Actions.Add(new ServiceEndpointAction(EditMode));
-                //TODO: Navigate to action page
+                var action = new ServiceEndpointAction(EditMode)
+                {
+                    MediaType = "application/json",
+                    Method = "Get"
+                };
+                Actions.Add(action);
+                _navigationService.NavigateTo(ActionPage.Key, action);
             });
             DeleteActionCommand = new RelayCommand<ServiceEndpointAction>(action => Actions.Remove(action));
         }

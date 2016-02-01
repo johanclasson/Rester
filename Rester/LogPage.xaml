@@ -19,8 +19,10 @@
             <SymbolIcon Symbol="Document"
                         Foreground="{ThemeResource ContentDialogBorderThemeBrush}"
                         Margin="0,0,10,0" />
-            <TextBlock Text="Log" Style="{StaticResource TitleTextBlockStyle}"
-                       Foreground="{ThemeResource ContentDialogBorderThemeBrush}" FontWeight="Bold" />
+            <TextBlock Text="Log"
+                       Style="{StaticResource TitleTextBlockStyle}"
+                       Foreground="{ThemeResource ContentDialogBorderThemeBrush}"
+                       FontWeight="Bold" />
         </StackPanel>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>

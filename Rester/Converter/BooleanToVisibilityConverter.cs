@@ -20,4 +20,24 @@ namespace Rester.Converter
             throw new NotImplementedException();
         }
     }
+
+    internal class DataRestMethodToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            bool result = value is string && IsDataMethod((string)value);
+            return result ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private bool IsDataMethod(string value)
+        {
+            value = value.ToLower();
+            return value == "post" || value == "put";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

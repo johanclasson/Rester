@@ -1,7 +1,25 @@
-﻿namespace Rester.Model
+﻿using System;
+using GalaSoft.MvvmLight;
+
+namespace Rester.Model
 {
     internal class ServiceEndpointAction : AbstractResterModel
     {
+        public ServiceEndpointAction()
+        {
+#if DEBUG
+            if (ViewModelBase.IsInDesignModeStatic)
+            {
+                Name = "My name";
+                Body = "Body" + Environment.NewLine + 
+                    "Language";
+                MediaType = "application/json";
+                Method = "Post";
+                UriPath = "mypath/jadda/jadda";
+            }
+#endif
+        }
+
         public ServiceEndpointAction(bool editMode = false) : base(editMode)
         {
         }

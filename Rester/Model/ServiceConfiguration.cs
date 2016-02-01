@@ -3,34 +3,46 @@ using System.Windows.Input;
 using Windows.UI.Popups;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Views;
 using Rester.Service;
 
 namespace Rester.Model
 {
     internal class ServiceConfiguration : AbstractResterModel
     {
+        private readonly INavigationService _navigationService;
         private readonly IActionInvokerFactory _invokerFactory;
 
-        public ServiceConfiguration(IActionInvokerFactory invokerFactory, bool editMode = false) : base(editMode)
+        public ServiceConfiguration(INavigationService navigationService, IActionInvokerFactory invokerFactory, bool editMode = false) : base(editMode)
         {
+            _navigationService = navigationService;
             _invokerFactory = invokerFactory;
             Endpoints = new ObservableCollectionWithAddRange<ServiceEndpoint>();
-            AddEndpointCommand = new RelayCommand(() => { Endpoints.Add(new ServiceEndpoint(EditMode)); });
+            AddEndpointCommand = new RelayCommand(() => { Endpoints.Add(new ServiceEndpoint(_navigationService, EditMode)); });
             InvokeUriCommand = new RelayCommand<ServiceEndpointAction>(async action =>
             {
-                action.Processing = true;
-                ((RelayCommand<ServiceEndpointAction>)InvokeUriCommand).RaiseCanExecuteChanged();
-                try
+                if (EditMode)
                 {
-                    var response = await _invokerFactory.CreateInvoker(BaseUri, action).InvokeRestAction();
-                    Messenger.Default.Send(new NotificationMessage<HttpResponse>(response, "Service Endpoint Action Result"));
+                    _navigationService.NavigateTo(ActionPage.Key, action);
                 }
-                catch (Exception ex)
+                else
                 {
-                    await new MessageDialog($"Something bad happended: {ex.Message}").ShowAsync(); //TODO: Move dialog call to somewhere else
+                    action.Processing = true;
+                    ((RelayCommand<ServiceEndpointAction>) InvokeUriCommand).RaiseCanExecuteChanged();
+                    try
+                    {
+                        var response = await _invokerFactory.CreateInvoker(BaseUri, action).InvokeRestAction();
+                        Messenger.Default.Send(new NotificationMessage<HttpResponse>(response,
+                            "Service Endpoint Action Result"));
+                    }
+                    catch (Exception ex)
+                    {
+                        await new MessageDialog($"Something bad happended: {ex.Message}").ShowAsync();
+                            //TODO: Move dialog call to somewhere else
+                    }
+                    action.Processing = false;
+                    ((RelayCommand<ServiceEndpointAction>) InvokeUriCommand).RaiseCanExecuteChanged();
                 }
-                action.Processing = false;
-                ((RelayCommand<ServiceEndpointAction>)InvokeUriCommand).RaiseCanExecuteChanged();
             }, action => action != null && !action.Processing);
             DeleteEndpointCommand = new RelayCommand<ServiceEndpoint>(endpoint => Endpoints.Remove(endpoint));
         }
