@@ -12,7 +12,7 @@ namespace Rester.Service
     {
         public Task<ServiceConfiguration[]> GetServiceConfigurations()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 

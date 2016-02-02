@@ -25,7 +25,8 @@ namespace Rester.Converter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            bool result = value is string && IsDataMethod((string)value);
+            var typedValue = value as string;
+            bool result = typedValue != null && IsDataMethod(typedValue);
             return result ? Visibility.Visible : Visibility.Collapsed;
         }
 

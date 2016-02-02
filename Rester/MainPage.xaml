@@ -15,14 +15,14 @@
             <DoubleAnimation Duration="0:0:1"
                              To="360"
                              Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)"
-                             Storyboard.TargetName="progressSpinner"
+                             Storyboard.TargetName="ProgressSpinner"
                              d:IsOptimized="True">
                 <DoubleAnimation.EasingFunction>
                     <CircleEase EasingMode="EaseInOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
-        <Style x:Key="spinnerStyle" TargetType="AppBarButton">
+        <Style x:Key="SpinnerStyle" TargetType="AppBarButton">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -114,10 +114,10 @@
             <CommandBar.Content>
                 <Grid />
             </CommandBar.Content>
-            <AppBarButton x:Name="progressSpinner" Icon="Sync" Label="" 
-                          Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}" RenderTransformOrigin="0.5,0.5" Style="{StaticResource spinnerStyle}" >
+            <AppBarButton x:Name="ProgressSpinner" Icon="Sync" Label="" 
+                          Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}" RenderTransformOrigin="0.5,0.5" Style="{StaticResource SpinnerStyle}" >
                 <AppBarButton.RenderTransform>
-                    <CompositeTransform x:Name="compositeTransform" Rotation="0"/>
+                    <CompositeTransform Rotation="0"/>
                 </AppBarButton.RenderTransform>
             </AppBarButton>
             <AppBarButton Icon="Add" Label="Add Service" Command="{Binding AddConfigurationCommand}"
@@ -151,7 +151,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <!-- Service Configuration -->
-                        <Grid Margin="0,20,0,0" Padding="9,10,10,10"
+                        <Grid Margin="0,20,0,0" Padding="9,10,10,20"
                               BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
                               BorderThickness="2" CornerRadius="5"
                               Name="ServiceConfiguration">

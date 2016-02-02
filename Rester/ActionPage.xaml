@@ -60,10 +60,10 @@
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Method:" />
                 <ComboBox Grid.Row="4" Grid.Column="1" SelectedValue="{Binding Method, Mode=TwoWay}"
                           SelectedValuePath="Content">
-                    <ComboBoxItem Name="Get">Get</ComboBoxItem>
-                    <ComboBoxItem Name="Put">Put</ComboBoxItem>
-                    <ComboBoxItem Name="Post">Post</ComboBoxItem>
-                    <ComboBoxItem Name="Delete">Delete</ComboBoxItem>
+                    <ComboBoxItem>Get</ComboBoxItem>
+                    <ComboBoxItem>Put</ComboBoxItem>
+                    <ComboBoxItem>Post</ComboBoxItem>
+                    <ComboBoxItem>Delete</ComboBoxItem>
                 </ComboBox>
                 <TextBlock Grid.Row="6" Grid.Column="0"
                            Text="Content Type:"

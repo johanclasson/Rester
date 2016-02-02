@@ -26,9 +26,8 @@ namespace Rester.ViewModel
             else
             {
                 SimpleIoc.Default.Register<IServiceStore, DesignServiceStore>();
-                SimpleIoc.Default.Register<ILogStore, DesignLogStore>();
                 //SimpleIoc.Default.Register<IServiceStore, ServiceStore>();
-                //SimpleIoc.Default.Register<ILogStore, LogStore>();
+                SimpleIoc.Default.Register<ILogStore, LogStore>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

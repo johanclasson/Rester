@@ -41,7 +41,7 @@ namespace Rester.ViewModel
             {
                 return _editMode;
             }
-            set
+            private set
             {
                 Set(nameof(EditMode), ref _editMode, value);
                 Messenger.Default.Send(new EditModeChangedMessage(value));

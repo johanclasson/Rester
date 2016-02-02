@@ -7,7 +7,7 @@ namespace Rester.Control
 {
     internal class ColumnWrapPanel : Panel
     {
-        public int ColumnTargetSize { get; set; } = 300;
+        private const int ColumnTargetSize = 300;
 
         private int GetColumnCount(Size size)
         {
