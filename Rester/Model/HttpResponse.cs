@@ -5,8 +5,8 @@ namespace Rester.Model
 {
     internal class HttpResponse : ObservableObject
     {
-        public int StatusCode { get { return _statusCode; } set { Set(nameof(StatusCode), ref _statusCode, value); } }
-        private int _statusCode;
+        public int? StatusCode { get { return _statusCode; } set { Set(nameof(StatusCode), ref _statusCode, value); } }
+        private int? _statusCode;
 
         public string ReasonPhrase { get { return _reasonPhrase; } set { Set(nameof(ReasonPhrase), ref _reasonPhrase, value); } }
         private string _reasonPhrase;
