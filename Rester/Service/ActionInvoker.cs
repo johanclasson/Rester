@@ -40,27 +40,39 @@ namespace Rester.Service
 
         public async Task<HttpResponse> InvokeRestAction()
         {
-            var watch = new Stopwatch();
-            watch.Start();
-            HttpResponseMessage result = await InvokeUriAsync();
-            var content = await result.Content.ReadAsStringAsync();
-            watch.Stop();
-            var response = CreateHttpResponse(result, content, watch.Elapsed);
-            return response;
+            // Not sure why this extra layer of async task is needed, but it is!
+            return await Task.Run(async () =>
+            {
+                var callTime = DateTime.Now;
+                var watch = new Stopwatch();
+                watch.Start();
+                try
+                {
+                    HttpResponseMessage result = await InvokeUriAsync();
+                    var content = await result.Content.ReadAsStringAsync();
+                    watch.Stop();
+                    return CreateHttpResponse((int)result.StatusCode, result.IsSuccessStatusCode, result.ReasonPhrase, content.Trim(), watch, callTime);
+                }
+                catch (HttpRequestException ex)
+                {
+                    watch.Stop();
+                    return CreateHttpResponse(null, false, ex.Message, string.Empty, watch, callTime);
+                }
+            });
         }
 
-        private HttpResponse CreateHttpResponse(HttpResponseMessage result, string content, TimeSpan timeToResponse)
+        private HttpResponse CreateHttpResponse(int? statusCode, bool isSuccessfulStatusCode, string reasonPhrase, string content, Stopwatch watch, DateTime callTime)
         {
             return new HttpResponse
             {
-                StatusCode = (int)result.StatusCode,
-                ReasonPhrase = result.ReasonPhrase,
-                Content = content.Trim(),
-                TimeToResponse = timeToResponse,
+                StatusCode = statusCode,
+                ReasonPhrase = reasonPhrase,
+                Content = content,
+                TimeToResponse = watch.Elapsed,
                 Uri = Uri.AbsoluteUri,
                 Method = _action.Method,
-                CallTime = DateTime.Now,
-                IsSuccessfulStatusCode = result.IsSuccessStatusCode
+                CallTime = callTime,
+                IsSuccessfulStatusCode = isSuccessfulStatusCode
             };
         }
 
