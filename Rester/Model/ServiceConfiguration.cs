@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Popups;
 using GalaSoft.MvvmLight.Command;
@@ -8,6 +9,9 @@ using Rester.Service;
 
 namespace Rester.Model
 {
+     internal class ActionProcessingMessage { }
+    internal class ActionCompletedMessage { }
+
     internal class ServiceConfiguration : AbstractResterModel
     {
         private readonly INavigationService _navigationService;
@@ -28,6 +32,7 @@ namespace Rester.Model
                 else
                 {
                     action.Processing = true;
+                    Messenger.Default.Send(new ActionProcessingMessage());
                     ((RelayCommand<ServiceEndpointAction>) InvokeUriCommand).RaiseCanExecuteChanged();
                     try
                     {
@@ -42,6 +47,8 @@ namespace Rester.Model
                     }
                     action.Processing = false;
                     ((RelayCommand<ServiceEndpointAction>) InvokeUriCommand).RaiseCanExecuteChanged();
+                    await Task.Delay(1000); //The spinner animation should run at least 1 sekond
+                    Messenger.Default.Send(new ActionCompletedMessage());
                 }
             }, action => action != null && !action.Processing);
             DeleteEndpointCommand = new RelayCommand<ServiceEndpoint>(endpoint => Endpoints.Remove(endpoint));
