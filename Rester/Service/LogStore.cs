@@ -7,19 +7,22 @@ namespace Rester.Service
 {
     internal class LogStore : ILogStore
     {
+        private bool OnlyFromToday { get; set; }
+
         public Task<bool> GetOnlyFromToday()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(OnlyFromToday);
         }
 
         public Task SetOnlyFromToday(bool value)
         {
-            throw new NotImplementedException();
+            OnlyFromToday = value;
+            return Task.CompletedTask;
         }
 
         public Task<HttpResponse[]> GetLogEntries()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new HttpResponse[0]);
         }
     }
 
