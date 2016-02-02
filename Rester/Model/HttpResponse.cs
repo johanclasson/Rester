@@ -3,7 +3,7 @@ using GalaSoft.MvvmLight;
 
 namespace Rester.Model
 {
-    internal class HttpResponse : ObservableObject
+    public class HttpResponse : ObservableObject
     {
         public int? StatusCode { get { return _statusCode; } set { Set(nameof(StatusCode), ref _statusCode, value); } }
         private int? _statusCode;

@@ -9,7 +9,7 @@ using Rester.Service;
 
 namespace Rester.Model
 {
-     internal class ActionProcessingMessage { }
+    internal class ActionProcessingMessage { }
     internal class ActionCompletedMessage { }
 
     internal class ServiceConfiguration : AbstractResterModel

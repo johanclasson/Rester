@@ -3,7 +3,7 @@ using GalaSoft.MvvmLight;
 
 namespace Rester.Model
 {
-    internal class ServiceEndpointAction : AbstractResterModel
+    public class ServiceEndpointAction : AbstractResterModel
     {
 #if DEBUG
         [Obsolete("Constructor is only present for design purposes")]

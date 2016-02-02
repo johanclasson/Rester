@@ -7,12 +7,12 @@ using Rester.Model;
 
 namespace Rester.Service
 {
-    internal interface IActionInvoker
+    public interface IActionInvoker
     {
         Task<HttpResponse> InvokeRestAction();
     }
 
-    internal interface IActionInvokerFactory
+    public interface IActionInvokerFactory
     {
         IActionInvoker CreateInvoker(string baseUri, ServiceEndpointAction action);
     }

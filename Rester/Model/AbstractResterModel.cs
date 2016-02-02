@@ -4,7 +4,7 @@ using Rester.Service;
 
 namespace Rester.Model
 {
-    internal abstract class AbstractResterModel : ObservableObject
+    public abstract class AbstractResterModel : ObservableObject
     {
         protected AbstractResterModel(bool editMode) : this()
         {
