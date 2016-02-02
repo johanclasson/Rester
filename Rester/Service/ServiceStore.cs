@@ -84,7 +84,7 @@ namespace Rester.Service
         {
             return new ServiceEndpointAction(configuration)
             {
-                Name = $"Action {i}",
+                Name = $"Action with long name {i}",
                 UriPath = "dostuff?a=b&c=d",
                 Method = "Get",
                 Body = "",
