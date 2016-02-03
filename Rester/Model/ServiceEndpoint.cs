@@ -5,7 +5,7 @@ using Rester.Service;
 
 namespace Rester.Model
 {
-    internal class ServiceEndpoint : AbstractResterModel
+    public class ServiceEndpoint : AbstractResterModel
     {
         private readonly ServiceConfiguration _configuration;
         private readonly INavigationService _navigationService;
