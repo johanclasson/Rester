@@ -10,45 +10,48 @@ namespace Rester.Tests
 {
     public class SerializationTests : ResterTestBase
     {
-        public const string SerializedServiceConfigurations = @"[
-  {
-    ""Name"": ""My configuration name"",
-    ""BaseUri"": ""http://baseuri"",
-    ""Endpoints"": [
-      {
-        ""Name"": ""My endpoint name 1"",
-        ""Actions"": [
-          {
-            ""Name"": ""My action name 1"",
-            ""Body"": ""My action body 1"",
-            ""MediaType"": ""My action content type 1"",
-            ""Method"": ""Post 1"",
-            ""UriPath"": ""my?action=path1""
-          },
-          {
-            ""Name"": ""My action name 2"",
-            ""Body"": ""My action body 2"",
-            ""MediaType"": ""My action content type 2"",
-            ""Method"": ""Post 2"",
-            ""UriPath"": ""my?action=path2""
-          }
-        ]
-      },
-      {
-        ""Name"": ""My endpoint name 2"",
-        ""Actions"": [
-          {
-            ""Name"": ""My action name 1"",
-            ""Body"": ""My action body 1"",
-            ""MediaType"": ""My action content type 1"",
-            ""Method"": ""Post 1"",
-            ""UriPath"": ""my?action=path1""
-          }
-        ]
-      }
-    ]
-  }
-]";
+        public const string SerializedServiceConfigurations = @"{
+  ""Version"": ""0.1"",
+  ""Configurations"": [
+    {
+      ""Name"": ""My configuration name"",
+      ""BaseUri"": ""http://baseuri"",
+      ""Endpoints"": [
+        {
+          ""Name"": ""My endpoint name 1"",
+          ""Actions"": [
+            {
+              ""Name"": ""My action name 1"",
+              ""Body"": ""My action body 1"",
+              ""MediaType"": ""My action content type 1"",
+              ""Method"": ""Post 1"",
+              ""UriPath"": ""my?action=path1""
+            },
+            {
+              ""Name"": ""My action name 2"",
+              ""Body"": ""My action body 2"",
+              ""MediaType"": ""My action content type 2"",
+              ""Method"": ""Post 2"",
+              ""UriPath"": ""my?action=path2""
+            }
+          ]
+        },
+        {
+          ""Name"": ""My endpoint name 2"",
+          ""Actions"": [
+            {
+              ""Name"": ""My action name 1"",
+              ""Body"": ""My action body 1"",
+              ""MediaType"": ""My action content type 1"",
+              ""Method"": ""Post 1"",
+              ""UriPath"": ""my?action=path1""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}";
 
         [Fact]
         public void ServiceConfiguration_ShouldBeSerializedToCorrectJson()
