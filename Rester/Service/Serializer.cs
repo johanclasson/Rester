@@ -26,7 +26,11 @@ namespace Rester.Service
                 JObject jConfig = SerializeServiceConfiguraion(configuration);
                 jConfigArray.Add(jConfig);
             }
-            return jConfigArray.ToString();
+            return new JObject
+            {
+                ["Version"] = "0.1",
+                ["Configurations"] = jConfigArray
+            }.ToString();
         }
 
         private static JObject SerializeServiceConfiguraion(ServiceConfiguration configuration)
@@ -89,8 +93,8 @@ namespace Rester.Service
 
         public ServiceConfiguration[] Deserialize(string data)
         {
-            JArray jArray = JArray.Parse(data);
-            return jArray.Cast<JObject>().Select(CreateServiceConfiguration).ToArray();
+            JObject jData = JObject.Parse(data);
+            return jData.GetJArray("Configurations").Select(CreateServiceConfiguration).ToArray();
         }
 
         private ServiceConfiguration CreateServiceConfiguration(JObject jConfig)
