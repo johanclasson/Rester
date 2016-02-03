@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using FluentAssertions;
 using Rester.Model;
 using Xunit;
@@ -9,7 +10,7 @@ namespace Rester.Tests
 {
     public class SerializationTests : ResterTestBase
     {
-        public const string Expected = @"[
+        public const string SerializedServiceConfigurations = @"[
   {
     ""Name"": ""My configuration name"",
     ""BaseUri"": ""http://baseuri"",
@@ -55,15 +56,15 @@ namespace Rester.Tests
             ServiceConfiguration configuration = CreateBuilder()
                 .WithEndpoint(1, 2)
                 .WithEndpoint(2, 1);
-            var result = Serializer.Serialize(new[] { configuration });
-            result.Should().Be(Expected);
+            string result = Serializer.Serialize(new[] {configuration});
+            result.Should().Be(SerializedServiceConfigurations);
         }
 
         [Fact]
         public void ASerializedAndCompressedLargeConfiguration_ShouldBeSmallerThanTheRoamingStorageQuota()
         {
             var configurations = BuildArrayOfServiceConfigurations(noConfigs: 10, noEndpoints: 20, noActions: 8);
-            var data = Serializer.Serialize(configurations);
+            string data = Serializer.Serialize(configurations);
             using (var compressedStream = new MemoryStream())
             {
                 Zipper.WriteCompressedDataToStream(compressedStream, data);
@@ -73,6 +74,35 @@ namespace Rester.Tests
             }
         }
 
-        //TODO: Deserialize
+        [Fact]
+        public void DeserializingConfigurations_ShouldCreateTheExpectedObjects()
+        {
+            var configurations = Deserializer.Deserialize(SerializedServiceConfigurations);
+            configurations.Length.Should().Be(1);
+            ServiceConfiguration configuration = configurations[0];
+            configuration.Name.Should().Be("My configuration name");
+            configuration.BaseUri.Should().Be("http://baseuri");
+            configuration.Endpoints.Count.Should().Be(2);
+
+            AssertEndpoint(configuration.Endpoints, endpointIndex: 0, noActions: 2);
+        }
+
+        private void AssertEndpoint(IList<ServiceEndpoint> endpoints, int endpointIndex, int noActions)
+        {
+            ServiceEndpoint endpoint = endpoints[endpointIndex];
+            endpoint.Name.Should().Be($"My endpoint name {endpointIndex + 1}");
+            endpoint.Actions.Count.Should().Be(noActions, "Number of actions");
+            for (int i = 0; i < noActions; i++)
+            {
+                var action = endpoint.Actions[i];
+                action.BaseUri.Should().Be("http://baseuri/");
+                int actionNumber = i + 1;
+                action.Name.Should().Be($"My action name {actionNumber}");
+                action.Body.Should().Be($"My action body {actionNumber}");
+                action.MediaType.Should().Be($"My action content type {actionNumber}");
+                action.Method.Should().Be($"Post {actionNumber}");
+                action.UriPath.Should().Be($"my?action=path{actionNumber}");
+            }
+        }
     }
 }

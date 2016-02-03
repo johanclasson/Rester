@@ -10,10 +10,9 @@ namespace Rester.Tests
         private readonly INavigationService _navigationService;
         private readonly ServiceConfiguration _configuration;
 
-        public ServiceConfigurationBuilder()
+        public ServiceConfigurationBuilder(INavigationService navigationService, IActionInvokerFactory invokerFactory)
         {
-            _navigationService = Mock.Of<INavigationService>();
-            var invokerFactory = Mock.Of<IActionInvokerFactory>();
+            _navigationService = navigationService;
             _configuration = new ServiceConfiguration(_navigationService, invokerFactory)
             {
                 BaseUri = "http://baseuri",
