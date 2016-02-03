@@ -7,7 +7,7 @@ namespace Rester.Tests
 {
     public class ZipperTests : ResterTestBase
     {
-        private string Data => SerializationTests.Expected;
+        private string Data => SerializationTests.SerializedServiceConfigurations;
 
         [Fact]
         public void SerializedConfiguration_ShouldBeMuchLessThanTheOriginalStream()
