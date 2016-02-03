@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 
 namespace Rester.Service
 {
-    internal class ObservableCollectionWithAddRange<T> : ObservableCollection<T>
+    public class ObservableCollectionWithAddRange<T> : ObservableCollection<T>
     {
         public void AddRange(IEnumerable<T> items)
         {

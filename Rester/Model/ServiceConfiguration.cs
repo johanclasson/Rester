@@ -12,7 +12,7 @@ namespace Rester.Model
     internal class ActionProcessingMessage { }
     internal class ActionCompletedMessage { }
 
-    internal class ServiceConfiguration : AbstractResterModel
+    public class ServiceConfiguration : AbstractResterModel
     {
         private readonly INavigationService _navigationService;
         private readonly IActionInvokerFactory _invokerFactory;
