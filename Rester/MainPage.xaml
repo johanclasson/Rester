@@ -28,8 +28,14 @@
             <CommandBar.Content>
                 <Grid />
             </CommandBar.Content>
-            <AppBarButton Label="Progress" 
-                          Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}">
+            <AppBarButton Icon="Add" Label="Add Service" Command="{Binding AddConfigurationCommand}"
+                          Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}" />
+            <AppBarButton Icon="Edit" Label="Edit" Command="{Binding EditModeCommand}"
+                          Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}" />
+            <AppBarButton Icon="Accept" Label="Done" Command="{Binding EditCompletedCommand}"
+                          Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}" />
+            <AppBarButton Label="Log"
+                          Command="{Binding NavigateToLogCommand}">
                 <AppBarButton.Icon>
                     <SymbolIcon Symbol="Sync"
                                 RenderTransformOrigin="0.5,0.5"
@@ -40,13 +46,6 @@
                     </SymbolIcon>
                 </AppBarButton.Icon>
             </AppBarButton>
-            <AppBarButton Icon="Add" Label="Add Service" Command="{Binding AddConfigurationCommand}"
-                          Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}" />
-            <AppBarButton Icon="Edit" Label="Edit" Command="{Binding EditModeCommand}"
-                          Visibility="{Binding EditMode, ConverterParameter=invert, Converter={StaticResource BoolToVis}}" />
-            <AppBarButton Icon="Accept" Label="Done" Command="{Binding EditCompletedCommand}"
-                          Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}" />
-            <AppBarButton Icon="Document" Label="Log" Command="{Binding NavigateToLogCommand}" />
         </CommandBar>
     </Page.BottomAppBar>
     <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
