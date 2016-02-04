@@ -10,24 +10,30 @@ namespace Rester.Model
         private readonly ServiceConfiguration _configuration;
         private readonly INavigationService _navigationService;
 
-        public ServiceEndpoint(ServiceConfiguration configuration, INavigationService navigationService, bool editMode = false) : base(editMode)
+        public static ServiceEndpoint CreateSilently(string name, ServiceConfiguration configuration,
+            INavigationService navigationService, bool editMode = false)
+        {
+            return new ServiceEndpoint(configuration, navigationService, editMode)
+            {
+                _name = name
+            };
+        }
+
+        private ServiceEndpoint(ServiceConfiguration configuration, INavigationService navigationService, bool editMode) : base(editMode)
         {
             _configuration = configuration;
             _navigationService = navigationService;
             AddActionCommand = new RelayCommand(() =>
             {
-                var action = new ServiceEndpointAction(() => _configuration.BaseUri, EditMode)
-                {
-                    MediaType = "application/json",
-                    Method = "Get"
-                };
+                var action = ServiceEndpointAction.CreateSilently("", "", "Get", "", "application/json",
+                    () => _configuration.BaseUri, EditMode);
                 Actions.Add(action);
                 _navigationService.NavigateTo(ActionPage.Key, action);
             });
             DeleteActionCommand = new RelayCommand<ServiceEndpointAction>(action => Actions.Remove(action));
         }
 
-        public string Name { get { return _name; } set { Set(nameof(Name), ref _name, value); } }
+        public string Name { get { return _name; } set { SetAndSave(nameof(Name), ref _name, value); } }
         private string _name;
 
         public ObservableCollectionWithAddRange<ServiceEndpointAction> Actions { get; } = new ObservableCollectionWithAddRange<ServiceEndpointAction>();

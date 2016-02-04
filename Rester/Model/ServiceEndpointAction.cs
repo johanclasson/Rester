@@ -22,24 +22,37 @@ namespace Rester.Model
         }
 #endif
 
-        public ServiceEndpointAction(Func<string> getBaseUri, bool editMode = false) : base(editMode)
+        public static ServiceEndpointAction CreateSilently(string name, string uriPath, string method,
+            string body, string mediaType, Func<string> getBaseUri, bool editMode = false)
+        {
+            return new ServiceEndpointAction(getBaseUri, editMode)
+            {
+                _uriPath = uriPath,
+                _name = name,
+                _method = method,
+                _body = body,
+                _mediaType = mediaType
+            };
+        }
+
+        private ServiceEndpointAction(Func<string> getBaseUri, bool editMode) : base(editMode)
         {
             GetBaseUri = getBaseUri;
         }
 
-        public string UriPath { get { return _uriPath; } set { Set(nameof(UriPath), ref _uriPath, value); } }
-        private string _uriPath;
-
-        public string Name { get { return _name; } set { Set(nameof(Name), ref _name, value); } }
+        public string Name { get { return _name; } set { SetAndSave(nameof(Name), ref _name, value); } }
         private string _name;
 
-        public string Method { get { return _method; } set { Set(nameof(Method), ref _method, value); } }
+        public string UriPath { get { return _uriPath; } set { SetAndSave(nameof(UriPath), ref _uriPath, value); } }
+        private string _uriPath;
+
+        public string Method { get { return _method; } set { SetAndSave(nameof(Method), ref _method, value); } }
         private string _method;
 
-        public string Body { get { return _body; } set { Set(nameof(Body), ref _body, value); } }
+        public string Body { get { return _body; } set { SetAndSave(nameof(Body), ref _body, value); } }
         private string _body;
 
-        public string MediaType { get { return _mediaType; } set { Set(nameof(MediaType), ref _mediaType, value); } }
+        public string MediaType { get { return _mediaType; } set { SetAndSave(nameof(MediaType), ref _mediaType, value); } }
         private string _mediaType;
 
         public bool Processing { get; set; }

@@ -54,23 +54,23 @@ namespace Rester.Tests
 }";
 
         [Fact]
-        public void ServiceConfiguration_ShouldBeSerializedToCorrectJson()
+        public async void ServiceConfiguration_ShouldBeSerializedToCorrectJson()
         {
             ServiceConfiguration configuration = CreateBuilder()
                 .WithEndpoint(1, 2)
                 .WithEndpoint(2, 1);
-            string result = Serializer.Serialize(new[] {configuration});
+            string result = await Serializer.SerializeAsync(new[] {configuration});
             result.Should().Be(SerializedServiceConfigurations);
         }
 
         [Fact]
-        public void ASerializedAndCompressedLargeConfiguration_ShouldBeSmallerThanTheRoamingStorageQuota()
+        public async void ASerializedAndCompressedLargeConfiguration_ShouldBeSmallerThanTheRoamingStorageQuota()
         {
             var configurations = BuildArrayOfServiceConfigurations(noConfigs: 10, noEndpoints: 20, noActions: 8);
-            string data = Serializer.Serialize(configurations);
+            string data = await Serializer.SerializeAsync(configurations);
             using (var compressedStream = new MemoryStream())
             {
-                Zipper.WriteCompressedDataToStream(compressedStream, data);
+                await Zipper.WriteCompressedDataToStream(compressedStream, data);
                 int actualNumberOfBytes = compressedStream.ToArray().Length;
                 // ApplicationData.RoamingStorageQuota is 100KB. For some reason that property cannot be accessed in the test project.
                 actualNumberOfBytes.Should().BeLessThan(100*1024);
@@ -78,9 +78,9 @@ namespace Rester.Tests
         }
 
         [Fact]
-        public void DeserializingConfigurations_ShouldCreateTheExpectedObjects()
+        public async void DeserializingConfigurations_ShouldCreateTheExpectedObjects()
         {
-            var configurations = Deserializer.Deserialize(SerializedServiceConfigurations);
+            var configurations = await Deserializer.DeserializeAsync(SerializedServiceConfigurations);
             configurations.Length.Should().Be(1);
             ServiceConfiguration configuration = configurations[0];
             configuration.Name.Should().Be("My configuration name");
