@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Rester.Model;
@@ -80,6 +81,7 @@ namespace Rester.Service
         {
             using (var client = new HttpClient())
             {
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
                 switch (_action.Method.ToLower())
                 {
                     case "get":
