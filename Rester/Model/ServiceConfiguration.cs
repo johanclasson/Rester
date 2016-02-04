@@ -17,12 +17,22 @@ namespace Rester.Model
         private readonly INavigationService _navigationService;
         private readonly IActionInvokerFactory _invokerFactory;
 
-        public ServiceConfiguration(INavigationService navigationService, IActionInvokerFactory invokerFactory, bool editMode = false) : base(editMode)
+        public static ServiceConfiguration CreateSilently(string name, string baseUri, INavigationService navigationService,
+            IActionInvokerFactory invokerFactory, bool editMode = false)
+        {
+            return new ServiceConfiguration(navigationService, invokerFactory, editMode)
+            {
+                _name = name,
+                _baseUri = baseUri
+            };
+        }
+
+        private ServiceConfiguration(INavigationService navigationService, IActionInvokerFactory invokerFactory, bool editMode) : base(editMode)
         {
             _navigationService = navigationService;
             _invokerFactory = invokerFactory;
             Endpoints = new ObservableCollectionWithAddRange<ServiceEndpoint>();
-            AddEndpointCommand = new RelayCommand(() => { Endpoints.Add(new ServiceEndpoint(this, _navigationService, EditMode)); });
+            AddEndpointCommand = new RelayCommand(() => { Endpoints.Add(ServiceEndpoint.CreateSilently("", this, _navigationService, EditMode)); });
             InvokeUriCommand = new RelayCommand<ServiceEndpointAction>(async action =>
             {
                 if (EditMode)
@@ -54,10 +64,10 @@ namespace Rester.Model
             DeleteEndpointCommand = new RelayCommand<ServiceEndpoint>(endpoint => Endpoints.Remove(endpoint));
         }
 
-        public string BaseUri { get { return _baseUri; } set { Set(nameof(BaseUri), ref _baseUri, value); } }
+        public string BaseUri { get { return _baseUri; } set { SetAndSave(nameof(BaseUri), ref _baseUri, value); } }
         private string _baseUri;
 
-        public string Name { get { return _name; } set { Set(nameof(Name), ref _name, value); } }
+        public string Name { get { return _name; } set { SetAndSave(nameof(Name), ref _name, value); } }
         private string _name;
 
         public ObservableCollectionWithAddRange<ServiceEndpoint> Endpoints { get; }

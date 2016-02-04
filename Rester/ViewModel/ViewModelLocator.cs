@@ -17,6 +17,9 @@ namespace Rester.ViewModel
             SimpleIoc.Default.Register(() => navigationService);
             SimpleIoc.Default.Register<IDialogService, DialogService>();
             SimpleIoc.Default.Register<IActionInvokerFactory, ActionInvokerFactory>();
+            SimpleIoc.Default.Register<IDeserializer, Deserializer>();
+            SimpleIoc.Default.Register<ISerializer, Serializer>();
+            SimpleIoc.Default.Register<IZipper, Zipper>();
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -25,8 +28,8 @@ namespace Rester.ViewModel
             }
             else
             {
-                SimpleIoc.Default.Register<IServiceStore, DesignServiceStore>();
-                //SimpleIoc.Default.Register<IServiceStore, ServiceStore>();
+                //SimpleIoc.Default.Register<IServiceStore, DesignServiceStore>();
+                SimpleIoc.Default.Register<IServiceStore, ServiceStore>();
                 SimpleIoc.Default.Register<ILogStore, LogStore>();
             }
 

@@ -1,5 +1,4 @@
 using GalaSoft.MvvmLight.Views;
-using Moq;
 using Rester.Model;
 using Rester.Service;
 
@@ -13,29 +12,19 @@ namespace Rester.Tests
         public ServiceConfigurationBuilder(INavigationService navigationService, IActionInvokerFactory invokerFactory)
         {
             _navigationService = navigationService;
-            _configuration = new ServiceConfiguration(_navigationService, invokerFactory)
-            {
-                BaseUri = "http://baseuri",
-                Name = "My configuration name"
-            };
+            _configuration = ServiceConfiguration.CreateSilently(
+                "My configuration name", "http://baseuri",
+                _navigationService, invokerFactory);
         }
 
         public ServiceConfigurationBuilder WithEndpoint(int index, int numberOfActions)
         {
-            var endpoint = new ServiceEndpoint(_configuration, _navigationService)
-            {
-                Name = $"My endpoint name {index}"
-            };
+            var endpoint = ServiceEndpoint.CreateSilently($"My endpoint name {index}", _configuration,
+                _navigationService);
             for (int i = 1; i <= numberOfActions; i++)
             {
-                var action = new ServiceEndpointAction(() => _configuration.BaseUri)
-                {
-                    Name = $"My action name {i}",
-                    Body = $"My action body {i}",
-                    MediaType = $"My action content type {i}",
-                    Method = $"Post {i}",
-                    UriPath = $"my?action=path{i}"
-                };
+                var action = ServiceEndpointAction.CreateSilently($"My action name {i}", $"my?action=path{i}",
+                    $"Post {i}", $"My action body {i}", $"My action content type {i}", () => _configuration.BaseUri);
                 endpoint.Actions.Add(action);
             }
             _configuration.Endpoints.Add(endpoint);

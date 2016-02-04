@@ -1,27 +1,40 @@
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rester.Service
 {
+    public interface IZipper
+    {
+        Task WriteCompressedDataToStream(Stream streamToWriteTo, string data);
+        Task<string> GetDataFromCompressedStream(Stream compressedStream);
+    }
+
     internal class Zipper : IZipper
     {
-        public void WriteCompressedDataToStream(Stream streamToWriteTo, string data)
+        public Task WriteCompressedDataToStream(Stream streamToWriteTo, string data)
         {
-            using (var uncompressedStream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
-            using (var compressionStream = new GZipStream(streamToWriteTo, CompressionLevel.Optimal))
+            return Task.Run(() =>
             {
-                uncompressedStream.CopyTo(compressionStream);
-            }
+                using (var uncompressedStream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+                using (var compressionStream = new GZipStream(streamToWriteTo, CompressionLevel.Optimal))
+                {
+                    uncompressedStream.CopyTo(compressionStream);
+                }
+            });
         }
 
-        public string GetDataFromCompressedStream(Stream compressedStream)
+        public Task<string> GetDataFromCompressedStream(Stream compressedStream)
         {
-            using (var decompress = new GZipStream(compressedStream, CompressionMode.Decompress))
-            using (var sr = new StreamReader(decompress))
+            return Task.Run(() =>
             {
-                return sr.ReadToEnd();
-            }
+                using (var decompress = new GZipStream(compressedStream, CompressionMode.Decompress))
+                using (var sr = new StreamReader(decompress))
+                {
+                    return sr.ReadToEnd();
+                }
+            });
         }
     }
 }

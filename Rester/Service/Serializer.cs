@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Views;
 using Newtonsoft.Json.Linq;
 using Rester.Model;
@@ -8,29 +9,32 @@ namespace Rester.Service
 {
     public interface ISerializer
     {
-        string Serialize(ServiceConfiguration[] configurations);
+        Task<string> SerializeAsync(IEnumerable<ServiceConfiguration> configurations);
     }
 
     public interface IDeserializer
     {
-        ServiceConfiguration[] Deserialize(string data);
+        Task<ServiceConfiguration[]> DeserializeAsync(string data);
     }
 
     internal class Serializer : ISerializer
     {
-        public string Serialize(ServiceConfiguration[] configurations)
+        public Task<string> SerializeAsync(IEnumerable<ServiceConfiguration> configurations)
         {
-            var jConfigArray = new JArray();
-            foreach (ServiceConfiguration configuration in configurations)
+            return Task.Run(() =>
             {
-                JObject jConfig = SerializeServiceConfiguraion(configuration);
-                jConfigArray.Add(jConfig);
-            }
-            return new JObject
-            {
-                ["Version"] = "0.1",
-                ["Configurations"] = jConfigArray
-            }.ToString();
+                var jConfigArray = new JArray();
+                foreach (ServiceConfiguration configuration in configurations)
+                {
+                    JObject jConfig = SerializeServiceConfiguraion(configuration);
+                    jConfigArray.Add(jConfig);
+                }
+                return new JObject
+                {
+                    ["Version"] = "0.1",
+                    ["Configurations"] = jConfigArray
+                }.ToString();
+            });
         }
 
         private static JObject SerializeServiceConfiguraion(ServiceConfiguration configuration)
@@ -91,19 +95,20 @@ namespace Rester.Service
             _invokerFactory = invokerFactory;
         }
 
-        public ServiceConfiguration[] Deserialize(string data)
+        public Task<ServiceConfiguration[]> DeserializeAsync(string data)
         {
-            JObject jData = JObject.Parse(data);
-            return jData.GetJArray("Configurations").Select(CreateServiceConfiguration).ToArray();
+            return Task.Run(() =>
+            {
+                JObject jData = JObject.Parse(data);
+                return jData.GetJArray("Configurations").Select(CreateServiceConfiguration).ToArray();
+            });
         }
 
         private ServiceConfiguration CreateServiceConfiguration(JObject jConfig)
         {
-            var configuration = new ServiceConfiguration(_navigationService, _invokerFactory)
-            {
-                Name = (string)jConfig["Name"],
-                BaseUri = (string)jConfig["BaseUri"]
-            };
+            var configuration = ServiceConfiguration.CreateSilently(
+                jConfig.Get("Name"), jConfig.Get("BaseUri"),
+                _navigationService, _invokerFactory);
             var endpoints = jConfig.GetJArray("Endpoints").Select(j => CreateEndpoint(j, configuration));
             configuration.Endpoints.AddRange(endpoints);
             return configuration;
@@ -111,32 +116,30 @@ namespace Rester.Service
 
         private ServiceEndpoint CreateEndpoint(JObject jEndpoint, ServiceConfiguration configuration)
         {
-            var endpoint = new ServiceEndpoint(configuration, _navigationService)
-            {
-                Name = (string)jEndpoint["Name"]
-            };
+            var endpoint = ServiceEndpoint.CreateSilently(jEndpoint.Get("Name"), configuration, _navigationService);
             endpoint.Actions.AddRange(jEndpoint.GetJArray("Actions").Select(j => CreateAction(j, configuration)));
             return endpoint;
         }
 
         private ServiceEndpointAction CreateAction(JObject jAction, ServiceConfiguration configuration)
         {
-            return new ServiceEndpointAction(() => configuration.BaseUri)
-            {
-                Name = (string)jAction["Name"],
-                Body = (string)jAction["Body"],
-                MediaType = (string)jAction["MediaType"],
-                Method = (string)jAction["Method"],
-                UriPath = (string)jAction["UriPath"]
-            };
+            return ServiceEndpointAction.CreateSilently(
+                jAction.Get("Name"), jAction.Get("UriPath"),
+                jAction.Get("Method"), jAction.Get("Body"),
+                jAction.Get("MediaType"), () => configuration.BaseUri);
         }
     }
 
-    internal static class JObjextExtensions
+    internal static class JObjectExtensions
     {
         public static IEnumerable<JObject> GetJArray(this JObject jObject, string propertyName)
         {
             return jObject[propertyName].Cast<JObject>();
+        }
+
+        public static string Get(this JObject jObject, string propertyName)
+        {
+            return (string)jObject[propertyName];
         }
     }
 }

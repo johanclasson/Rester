@@ -1,4 +1,7 @@
-﻿using System.Windows.Input;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.Storage;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -19,17 +22,38 @@ namespace Rester.ViewModel
             _serviceStore = serviceStore;
             _navigationService = navigationService; //For some reason, the navigation does not work if not kept as a member
             _invokerFactory = invokerFactory;
-            LoadData();
+            LoadDataAsync();
+            InitHandlers();
+            Messenger.Default.Register<SomethingIsChangedMessage>(this, async _ => await StoreDataAsync());
             NavigateToLogCommand = new RelayCommand(() => _navigationService.NavigateTo(LogPage.Key));
             EditModeCommand = new RelayCommand(() => EditMode = true);
             EditCompletedCommand = new RelayCommand(() => EditMode = false); //TODO: Save to store now or on every change?
             DeleteConfigurationCommand = new RelayCommand<ServiceConfiguration>(configuration => ServiceConfigurations.Remove(configuration));
-            AddConfigurationCommand = new RelayCommand(() => ServiceConfigurations.Add(new ServiceConfiguration(_navigationService, _invokerFactory, EditMode)));
+            AddConfigurationCommand = new RelayCommand(AddEmptyServiceConfiguration);
         }
 
-        private async void LoadData()
+        private void AddEmptyServiceConfiguration()
         {
-            var configs = await _serviceStore.GetServiceConfigurations();
+            ServiceConfigurations.Add(ServiceConfiguration.CreateSilently("", "", _navigationService, _invokerFactory, EditMode));
+        }
+
+        private Task StoreDataAsync()
+        {
+            return _serviceStore.SaveServiceConfigurations(ServiceConfigurations);
+        }
+
+        void InitHandlers()
+        {
+            ApplicationData.Current.DataChanged += (_, __) =>
+            {
+                //TODO: Is this method called also when the current app saves data to the roaming store?
+                LoadDataAsync();
+            };
+        }
+
+        private async void LoadDataAsync()
+        {
+            var configs = await _serviceStore.LoadServiceConfigurations();
             ServiceConfigurations.ClearAndAddRange(configs);
         }
 
