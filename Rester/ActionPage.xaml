@@ -13,16 +13,14 @@
     </Page.Resources>
     <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="10,10,10,20">
-                <SymbolIcon Symbol="Edit"
-                            Foreground="{ThemeResource ContentDialogBorderThemeBrush}"
-                            Margin="0,0,10,0" />
+            <StackPanel Orientation="Horizontal"
+                        Background="{ThemeResource ContentDialogBorderThemeBrush}"
+                        Padding="0,0,0,0">
+                <Image Source="Assets/Square150x150Logo.scale-400.png" Width="70" Margin="0,0,10,0" />
                 <TextBlock Text="Action"
-                           Style="{StaticResource TitleTextBlockStyle}"
-                           Foreground="{ThemeResource ContentDialogBorderThemeBrush}"
-                           FontWeight="Bold" />
+                           Style="{StaticResource HeaderTextBlockStyle}" />
             </StackPanel>
-            <Grid Margin="10">
+            <Grid Margin="10,30,10,10">
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
                         <Setter Property="VerticalAlignment" Value="Center" />
