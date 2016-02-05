@@ -32,7 +32,11 @@ namespace Rester.Model
             _navigationService = navigationService;
             _invokerFactory = invokerFactory;
             Endpoints = new ObservableCollectionWithAddRange<ServiceEndpoint>();
-            AddEndpointCommand = new RelayCommand(() => { Endpoints.Add(ServiceEndpoint.CreateSilently("", this, _navigationService, EditMode)); });
+            AddEndpointCommand = new RelayCommand(() =>
+            {
+                Endpoints.Add(ServiceEndpoint.CreateSilently("", this, _navigationService, EditMode));
+                NotifyThatSomethingIsChanged();
+            });
             InvokeUriCommand = new RelayCommand<ServiceEndpointAction>(async action =>
             {
                 if (EditMode)
@@ -61,7 +65,11 @@ namespace Rester.Model
                     Messenger.Default.Send(new ActionCompletedMessage());
                 }
             }, action => action != null && !action.Processing);
-            DeleteEndpointCommand = new RelayCommand<ServiceEndpoint>(endpoint => Endpoints.Remove(endpoint));
+            DeleteEndpointCommand = new RelayCommand<ServiceEndpoint>(endpoint =>
+            {
+                Endpoints.Remove(endpoint);
+                NotifyThatSomethingIsChanged();
+            });
         }
 
         public string BaseUri { get { return _baseUri; } set { SetAndSave(nameof(BaseUri), ref _baseUri, value); } }

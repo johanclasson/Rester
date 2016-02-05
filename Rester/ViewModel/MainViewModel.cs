@@ -27,13 +27,18 @@ namespace Rester.ViewModel
             NavigateToLogCommand = new RelayCommand(() => _navigationService.NavigateTo(LogPage.Key));
             EditModeCommand = new RelayCommand(() => EditMode = true);
             EditCompletedCommand = new RelayCommand(() => EditMode = false); //TODO: Save to store now or on every change?
-            DeleteConfigurationCommand = new RelayCommand<ServiceConfiguration>(configuration => ServiceConfigurations.Remove(configuration));
+            DeleteConfigurationCommand = new RelayCommand<ServiceConfiguration>(async configuration =>
+            {
+                ServiceConfigurations.Remove(configuration);
+                await StoreDataAsync();
+            });
             AddConfigurationCommand = new RelayCommand(AddEmptyServiceConfiguration);
         }
 
-        private void AddEmptyServiceConfiguration()
+        private async void AddEmptyServiceConfiguration()
         {
             ServiceConfigurations.Add(ServiceConfiguration.CreateSilently("", "", _navigationService, _invokerFactory, EditMode));
+            await StoreDataAsync();
         }
 
         private Task StoreDataAsync()

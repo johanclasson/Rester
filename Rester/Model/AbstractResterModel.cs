@@ -24,6 +24,11 @@ namespace Rester.Model
         protected void SetAndSave<T>(string propertyName, ref T field, T newValue)
         {
             Set(propertyName, ref field, newValue);
+            NotifyThatSomethingIsChanged();
+        }
+
+        protected void NotifyThatSomethingIsChanged()
+        {
             Messenger.Default.Send(new SomethingIsChangedMessage());
         }
     }
