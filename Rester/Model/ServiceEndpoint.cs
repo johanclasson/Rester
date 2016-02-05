@@ -28,9 +28,14 @@ namespace Rester.Model
                 var action = ServiceEndpointAction.CreateSilently("", "", "Get", "", "application/json",
                     () => _configuration.BaseUri, EditMode);
                 Actions.Add(action);
+                NotifyThatSomethingIsChanged();
                 _navigationService.NavigateTo(ActionPage.Key, action);
             });
-            DeleteActionCommand = new RelayCommand<ServiceEndpointAction>(action => Actions.Remove(action));
+            DeleteActionCommand = new RelayCommand<ServiceEndpointAction>(action =>
+            {
+                Actions.Remove(action);
+                NotifyThatSomethingIsChanged();
+            });
         }
 
         public string Name { get { return _name; } set { SetAndSave(nameof(Name), ref _name, value); } }
