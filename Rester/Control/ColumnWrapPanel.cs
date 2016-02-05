@@ -12,6 +12,8 @@ namespace Rester.Control
         private int GetColumnCount(Size size)
         {
             var columnCount = (int) Math.Floor(size.Width/ColumnTargetSize);
+            if (Children.Count < columnCount)
+                columnCount = Children.Count;
             if (columnCount == 0)
                 return 1;
             return columnCount;
