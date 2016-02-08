@@ -26,7 +26,7 @@ namespace Rester.Tests
             return new ServiceConfigurationBuilder(NavigationServiceMock, InvokerFactoryMock);
         }
 
-        protected ServiceConfiguration[] BuildArrayOfServiceConfigurations(int noConfigs, int noEndpoints, int noActions)
+        protected ServiceConfiguration[] BuildArrayOfConfigurations(int noConfigs, int noEndpoints, int noActions)
         {
             var configurations = new List<ServiceConfiguration>();
             for (int configIndex = 0; configIndex < noConfigs; configIndex++)

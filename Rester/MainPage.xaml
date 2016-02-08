@@ -18,7 +18,7 @@
                              Storyboard.TargetName="ProgressSpinner"
                              d:IsOptimized="True">
                 <DoubleAnimation.EasingFunction>
-                    <CircleEase EasingMode="EaseInOut"/>
+                    <CircleEase EasingMode="EaseInOut" />
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
@@ -28,6 +28,10 @@
             <CommandBar.Content>
                 <Grid />
             </CommandBar.Content>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Import..." Command="{Binding ImportConfigurationsCommand}" />
+                <AppBarButton Label="Export..." Command="{Binding ExportConfigurationsCommand}" />
+            </CommandBar.SecondaryCommands>
             <AppBarButton Icon="Add" Label="Add Service" Command="{Binding AddConfigurationCommand}"
                           Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}" />
             <AppBarButton Icon="Edit" Label="Edit" Command="{Binding EditModeCommand}"
@@ -41,7 +45,7 @@
                                 RenderTransformOrigin="0.5,0.5"
                                 x:Name="ProgressSpinner">
                         <SymbolIcon.RenderTransform>
-                            <CompositeTransform Rotation="0"/>
+                            <CompositeTransform Rotation="0" />
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </AppBarButton.Icon>
@@ -58,7 +62,7 @@
                 <TextBlock Text="Rester"
                            Style="{StaticResource HeaderTextBlockStyle}" />
             </StackPanel>
-            <ListView ItemsSource="{Binding ServiceConfigurations}"
+            <ListView ItemsSource="{Binding Configurations}"
                       SelectionMode="None"
                       IsItemClickEnabled="False">
                 <ListView.ItemsPanel>
@@ -72,7 +76,7 @@
                         <Grid Margin="0,20,0,0" Padding="9,10,10,20"
                               BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
                               BorderThickness="2" CornerRadius="5"
-                              Name="ServiceConfiguration">
+                              x:Name="ServiceConfiguration">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
@@ -120,7 +124,7 @@
                                     <DataTemplate>
                                         <!-- Endpoint -->
                                         <StackPanel Orientation="Vertical" Margin="0,0,0,10"
-                                                    Name="Endpoint">
+                                                    x:Name="Endpoint">
                                             <Grid CornerRadius="5"
                                                   Background="{ThemeResource ContentDialogBorderThemeBrush}"
                                                   Margin="0,4,0,4">
@@ -176,7 +180,7 @@
                                                                 Margin="-40,0,0,0"
                                                                 VerticalAlignment="Top"
                                                                 Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}">
-                                                                <SymbolIcon Symbol="Delete"/>
+                                                                <SymbolIcon Symbol="Delete" />
                                                             </Button>
                                                         </StackPanel>
                                                     </DataTemplate>
@@ -195,7 +199,7 @@
                                     HorizontalAlignment="Right"
                                     Margin="0,0,18,0"
                                     Command="{Binding AddEndpointCommand}"
-                                    Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}"/>
+                                    Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

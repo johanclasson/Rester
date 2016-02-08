@@ -1,5 +1,9 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using Windows.Storage;
+using Windows.UI.Xaml.Navigation;
+using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Messaging;
 using Rester.Model;
+using Rester.ViewModel;
 
 namespace Rester
 {
@@ -21,6 +25,18 @@ namespace Rester
                 if (_nrOfProcessingActions == 0)
                     SpinningProgress.Stop();
             });
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var storageFiles = e.Parameter as StorageFile[];
+            if (storageFiles == null)
+                return;
+            var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
+            foreach (StorageFile storageFile in storageFiles)
+            {
+                await mainViewModel.ImportConfigurationsFromFileAsync(storageFile);
+            }
         }
     }
 }

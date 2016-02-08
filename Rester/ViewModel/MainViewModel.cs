@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
 using GalaSoft.MvvmLight;
@@ -12,38 +13,90 @@ namespace Rester.ViewModel
 {
     internal class MainViewModel : ViewModelBase
     {
-        private readonly IServiceStore _serviceStore;
+        private readonly IConfigurationStore _configurationStore;
         private readonly INavigationService _navigationService;
         private readonly IActionInvokerFactory _invokerFactory;
+        private readonly IDialog _dialog;
+        private readonly IFilePicker _filePicker;
 
-        public MainViewModel(IServiceStore serviceStore, INavigationService navigationService, IActionInvokerFactory invokerFactory)
+        public MainViewModel(IConfigurationStore configurationStore, INavigationService navigationService, IActionInvokerFactory invokerFactory,
+            IDialog dialog, IFilePicker filePicker)
         {
-            _serviceStore = serviceStore;
+            _configurationStore = configurationStore;
             _navigationService = navigationService; //For some reason, the navigation does not work if not kept as a member
             _invokerFactory = invokerFactory;
+            _dialog = dialog;
+            _filePicker = filePicker;
             LoadDataAsync();
             InitHandlers();
             Messenger.Default.Register<SomethingIsChangedMessage>(this, async _ => await StoreDataAsync());
             NavigateToLogCommand = new RelayCommand(() => _navigationService.NavigateTo(LogPage.Key));
             EditModeCommand = new RelayCommand(() => EditMode = true);
-            EditCompletedCommand = new RelayCommand(() => EditMode = false); //TODO: Save to store now or on every change?
+            EditCompletedCommand = new RelayCommand(() => EditMode = false);
             DeleteConfigurationCommand = new RelayCommand<ServiceConfiguration>(async configuration =>
             {
-                ServiceConfigurations.Remove(configuration);
+                Configurations.Remove(configuration);
                 await StoreDataAsync();
             });
             AddConfigurationCommand = new RelayCommand(AddEmptyServiceConfiguration);
+            ExportConfigurationsCommand = new RelayCommand(async () => await ExportConfigurationsAsync());
+            ImportConfigurationsCommand = new RelayCommand(async () => await PickFileAndImportSerficeConfigurationsAsync());
+        }
+
+        private Task ExportConfigurationsAsync()
+        {
+            return _filePicker.CreateTargetFileAsync(async storageFile =>
+            {
+                await _configurationStore.SaveConfigurationsToFileAsync(Configurations, storageFile);
+            });
+        }
+
+        private async Task PickFileAndImportSerficeConfigurationsAsync()
+        {
+            StorageFile storageFile = await _filePicker.PickSingleFileForImportAsync();
+            if (storageFile == null)
+                return;
+            await ImportConfigurationsFromFileAsync(storageFile);
+        }
+
+        public async Task ImportConfigurationsFromFileAsync(StorageFile storageFile)
+        {
+            ServiceConfiguration[] configurations;
+            try
+            {
+                configurations = await _configurationStore.GetConfigurationsFromFileAsync(storageFile);
+            }
+            catch (Exception ex)
+            {
+                await _dialog.ShowAsync($"Could not read data because {ex.Message}", "Import Error");
+                return;
+            }
+            string pluralS = configurations.Length > 1 ? "s" : "";
+            var message = $"Found configurations for {configurations.Length} service{pluralS}. " +
+                          "Do you want to replace the currently configured services, or have the new services added to to them?";
+            string answer =
+                await _dialog.ShowAsync(message, "File content parsed correctly", new[] {"Add", "Replace", "Cancel"});
+            switch (answer)
+            {
+                case "Replace":
+                    Configurations.ClearAndAddRange(configurations);
+                    break;
+                case "Add":
+                    Configurations.AddRange(configurations);
+                    break;
+            }
+            await StoreDataAsync();
         }
 
         private async void AddEmptyServiceConfiguration()
         {
-            ServiceConfigurations.Add(ServiceConfiguration.CreateSilently("", "", _navigationService, _invokerFactory, EditMode));
+            Configurations.Add(ServiceConfiguration.CreateSilently("", "", _navigationService, _invokerFactory, EditMode));
             await StoreDataAsync();
         }
 
         private Task StoreDataAsync()
         {
-            return _serviceStore.SaveServiceConfigurations(ServiceConfigurations);
+            return _configurationStore.SaveConfigurationsAsync(Configurations);
         }
 
         void InitHandlers()
@@ -57,11 +110,11 @@ namespace Rester.ViewModel
 
         private async void LoadDataAsync()
         {
-            var configs = await _serviceStore.LoadServiceConfigurations();
-            ServiceConfigurations.ClearAndAddRange(configs);
+            var configs = await _configurationStore.LoadConfigurationsAsync();
+            Configurations.ClearAndAddRange(configs);
         }
 
-        public ObservableCollectionWithAddRange<ServiceConfiguration> ServiceConfigurations { get; } = new ObservableCollectionWithAddRange<ServiceConfiguration>();
+        public ObservableCollectionWithAddRange<ServiceConfiguration> Configurations { get; } = new ObservableCollectionWithAddRange<ServiceConfiguration>();
 
         public bool EditMode
         {
@@ -83,5 +136,7 @@ namespace Rester.ViewModel
         public ICommand EditCompletedCommand { get; }
         public ICommand DeleteConfigurationCommand { get; }
         public ICommand AddConfigurationCommand { get; }
+        public ICommand ExportConfigurationsCommand { get; }
+        public ICommand ImportConfigurationsCommand { get; }
     }
 }

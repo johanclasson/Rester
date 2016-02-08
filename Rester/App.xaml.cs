@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,54 +24,13 @@ namespace Rester
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            Init(e.PreviousExecutionState, e.Arguments);
+        }
 
-#if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                //this.DebugSettings.EnableFrameRateCounter = true;
-            }
-#endif
-
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (rootFrame == null)
-            {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
-
-                rootFrame.NavigationFailed += OnNavigationFailed;
-                rootFrame.Navigated += OnNavigated; // Back button guide: http://www.wintellect.com/devcenter/jprosise/handling-the-back-button-in-windows-10-uwp-apps
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Load state from previously suspended application
-                }
-
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
-
-                // Register a handler for BackRequested events and set the
-                // visibility of the Back button
-                SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
-
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                    rootFrame.CanGoBack ?
-                    AppViewBackButtonVisibility.Visible :
-                    AppViewBackButtonVisibility.Collapsed;
-            }
-
-            if (rootFrame.Content == null)
-            {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame.Navigate(typeof(MainPage), e.Arguments);
-            }
-            // Ensure the current window is active
-            Window.Current.Activate();
-            DispatcherHelper.Initialize();
+        protected override void OnFileActivated(FileActivatedEventArgs e)
+        {
+            StorageFile[] storageFiles = e.Files.Cast<StorageFile>().ToArray();
+            Init(e.PreviousExecutionState, storageFiles);
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
@@ -96,11 +57,63 @@ namespace Rester
                 rootFrame.GoBack();
             }
         }
+
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        private void Init(ApplicationExecutionState previousExecutionState, object arguments)
+        {
+
+#if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                //this.DebugSettings.EnableFrameRateCounter = true;
+            }
+#endif
+
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            // Do not repeat app initialization when the Window already has content,
+            // just ensure that the window is active
+            if (rootFrame == null)
+            {
+                // Create a Frame to act as the navigation context and navigate to the first page
+                rootFrame = new Frame();
+
+                rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.Navigated += OnNavigated; // Back button guide: http://www.wintellect.com/devcenter/jprosise/handling-the-back-button-in-windows-10-uwp-apps
+
+                if (previousExecutionState == ApplicationExecutionState.Terminated)
+                {
+                    //TODO: Load state from previously suspended application
+                }
+                // Place the frame in the current Window
+                Window.Current.Content = rootFrame;
+
+                // Register a handler for BackRequested events and set the
+                // visibility of the Back button
+                SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                    AppViewBackButtonVisibility.Visible :
+                    AppViewBackButtonVisibility.Collapsed;
+            }
+
+            if (rootFrame.Content == null)
+            {
+                // When the navigation stack isn't restored navigate to the first page,
+                // configuring the new page by passing required information as a navigation
+                // parameter
+                rootFrame.Navigate(typeof(MainPage), arguments);
+            }
+            // Ensure the current window is active
+            Window.Current.Activate();
+            DispatcherHelper.Initialize();
         }
     }
 }
