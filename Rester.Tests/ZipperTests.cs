@@ -22,7 +22,7 @@ namespace Rester.Tests
         }
 
         [Fact]
-        public async void DecompressingAComporessedStream_ShouldYieldTheOriginalData()
+        public async void DecompressingACompressedStream_ShouldYieldTheOriginalData()
         {
             using (var compressedStream = new MemoryStream())
             {

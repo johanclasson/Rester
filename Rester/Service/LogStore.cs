@@ -5,6 +5,7 @@ using Rester.Model;
 
 namespace Rester.Service
 {
+    // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class LogStore : ILogStore
     {
         private bool OnlyFromToday { get; set; }
@@ -26,6 +27,7 @@ namespace Rester.Service
         }
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class DesignLogStore : ILogStore
     {
         private bool OnlyFromToday { get; set; } = true;
@@ -52,7 +54,7 @@ namespace Rester.Service
                 entries.Add(new HttpResponse
                 {
                     Content = @"jadda jadda
-pradda fladda",
+jadda jadda",
                     ReasonPhrase = "OK",
                     TimeToResponse = TimeSpan.FromMilliseconds(123.9),
                     StatusCode = 200,

@@ -7,6 +7,7 @@ namespace Rester.Model
     {
 #if DEBUG
         [Obsolete("Constructor is only present for design purposes")]
+        // ReSharper disable once UnusedMember.Global - Constructor is only present for design purposes
         public ServiceEndpointAction()
         {
             if (ViewModelBase.IsInDesignModeStatic)

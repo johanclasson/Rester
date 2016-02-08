@@ -51,7 +51,7 @@ namespace Rester.Model
                     await InvokeRestActionAsync(action);
                     action.Processing = false;
                     ((RelayCommand<ServiceEndpointAction>) InvokeUriCommand).RaiseCanExecuteChanged();
-                    await Task.Delay(1000); //The spinner animation should run at least 1 sekond
+                    await Task.Delay(1000); //The spinner animation should run at least 1 second
                     Messenger.Default.Send(new ActionCompletedMessage());
                 }
             }, action => action != null && !action.Processing);
@@ -86,7 +86,11 @@ namespace Rester.Model
         public ObservableCollectionWithAddRange<ServiceEndpoint> Endpoints { get; }
         public ICommand AddEndpointCommand { get; }
 
+        // ReSharper disable once MemberCanBePrivate.Global - It is used by a child binding through element name
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public ICommand InvokeUriCommand { get; }
+        // ReSharper disable once MemberCanBePrivate.Global - It is used by a child binding through element name
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public ICommand DeleteEndpointCommand { get; }
     }
 }

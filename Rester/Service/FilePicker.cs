@@ -12,6 +12,7 @@ namespace Rester.Service
         Task<StorageFile> PickSingleFileForImportAsync();
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class FilePicker : IFilePicker
     {
         private readonly IDialog _dialog;

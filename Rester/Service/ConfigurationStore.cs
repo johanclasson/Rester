@@ -18,6 +18,7 @@ namespace Rester.Service
         Task<ServiceConfiguration[]> GetConfigurationsFromFileAsync(StorageFile file);
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class ConfigurationStore : IConfigurationStore
     {
         private const string ResterDbFilename = "rester.db";
@@ -47,7 +48,7 @@ namespace Rester.Service
             }
             catch (Exception ex)
             {
-                await _dialog.ShowAsync($"Could not read syncronized data because {ex.Message}", "Syncronization Error");
+                await _dialog.ShowAsync($"Could not read syncronized data because {ex.Message}", "Synchronization Error");
                 return new ServiceConfiguration[0];
             }
         }
@@ -101,6 +102,7 @@ namespace Rester.Service
         }
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class DesignConfigurationStore : IConfigurationStore
     {
         public Task<ServiceConfiguration[]> LoadConfigurationsAsync()
@@ -136,7 +138,7 @@ namespace Rester.Service
                 ServiceEndpointAction.CreateSilently("Av", "json.htm?type=command&param=switchlight&idx=1&switchcmd=Off",
                 "Get", "", "", () => configuration.BaseUri)
             };
-            var serviceEndpoint = ServiceEndpoint.CreateSilently("Matrymmet", configuration, NavigationService);
+            var serviceEndpoint = ServiceEndpoint.CreateSilently("Dining Room", configuration, NavigationService);
             serviceEndpoint.Actions.AddRange(actions);
             ServiceEndpoint[] endpoints =
             {
