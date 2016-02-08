@@ -51,14 +51,8 @@ Global
 		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Debug|x86.Deploy.0 = Debug|x86
 		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|Any CPU.ActiveCfg = Release|x86
 		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|ARM.ActiveCfg = Release|ARM
-		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|ARM.Build.0 = Release|ARM
-		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|ARM.Deploy.0 = Release|ARM
 		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|x64.ActiveCfg = Release|x64
-		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|x64.Build.0 = Release|x64
-		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|x64.Deploy.0 = Release|x64
 		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|x86.ActiveCfg = Release|x86
-		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|x86.Build.0 = Release|x86
-		{401F9F28-CD49-48AC-86CC-27C2C13E2DD6}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
