@@ -48,17 +48,7 @@ namespace Rester.Model
                     action.Processing = true;
                     Messenger.Default.Send(new ActionProcessingMessage());
                     ((RelayCommand<ServiceEndpointAction>) InvokeUriCommand).RaiseCanExecuteChanged();
-                    try
-                    {
-                        var response = await _invokerFactory.CreateInvoker(BaseUri, action).InvokeRestAction();
-                        Messenger.Default.Send(new NotificationMessage<HttpResponse>(response,
-                            "Service Endpoint Action Result"));
-                    }
-                    catch (Exception ex)
-                    {
-                        await new MessageDialog($"Something bad happended: {ex.Message}").ShowAsync();
-                            //TODO: Move dialog call to somewhere else
-                    }
+                    await InvokeRestActionAsync(action);
                     action.Processing = false;
                     ((RelayCommand<ServiceEndpointAction>) InvokeUriCommand).RaiseCanExecuteChanged();
                     await Task.Delay(1000); //The spinner animation should run at least 1 sekond
@@ -70,6 +60,21 @@ namespace Rester.Model
                 Endpoints.Remove(endpoint);
                 NotifyThatSomethingIsChanged();
             });
+        }
+
+        private async Task InvokeRestActionAsync(ServiceEndpointAction action)
+        {
+            try
+            {
+                var response = await _invokerFactory.CreateInvoker(BaseUri, action).InvokeRestActionAsync();
+                Messenger.Default.Send(new NotificationMessage<HttpResponse>(response,
+                    "Service Endpoint Action Result"));
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog($"Something bad happended: {ex.Message}").ShowAsync();
+                //TODO: Move dialog call to somewhere else
+            }
         }
 
         public string BaseUri { get { return _baseUri; } set { SetAndSave(nameof(BaseUri), ref _baseUri, value); } }

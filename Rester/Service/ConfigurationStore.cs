@@ -10,23 +10,31 @@ using Rester.Model;
 
 namespace Rester.Service
 {
-    internal class ServiceStore : IServiceStore
+    internal interface IConfigurationStore
+    {
+        Task<ServiceConfiguration[]> LoadConfigurationsAsync();
+        Task SaveConfigurationsAsync(IEnumerable<ServiceConfiguration> configurations);
+        Task SaveConfigurationsToFileAsync(IEnumerable<ServiceConfiguration> configurations, StorageFile storageFile);
+        Task<ServiceConfiguration[]> GetConfigurationsFromFileAsync(StorageFile file);
+    }
+
+    internal class ConfigurationStore : IConfigurationStore
     {
         private const string ResterDbFilename = "rester.db";
         private readonly IZipper _zipper;
         private readonly IDeserializer _deserializer;
         private readonly ISerializer _serializer;
-        private readonly IDialogService _dialogService;
+        private readonly IDialog _dialog;
 
-        public ServiceStore(IZipper zipper, IDeserializer deserializer, ISerializer serializer, IDialogService dialogService)
+        public ConfigurationStore(IZipper zipper, IDeserializer deserializer, ISerializer serializer, IDialog dialog)
         {
             _zipper = zipper;
             _deserializer = deserializer;
             _serializer = serializer;
-            _dialogService = dialogService;
+            _dialog = dialog;
         }
 
-        public async Task<ServiceConfiguration[]> LoadServiceConfigurations()
+        public async Task<ServiceConfiguration[]> LoadConfigurationsAsync()
         {
             StorageFile file = await GetAvailableStorageFileOrNullAsync();
             if (file == null)
@@ -35,23 +43,35 @@ namespace Rester.Service
             }
             try
             {
-                Stream fileStream = await file.OpenStreamForReadAsync();
-                string data = await _zipper.GetDataFromCompressedStream(fileStream);
-                return await _deserializer.DeserializeAsync(data);
+                return await GetConfigurationsFromFileAsync(file);
             }
             catch (Exception ex)
             {
-                await _dialogService.ShowError($"Could not read syncronized data because {ex.Message}", "Syncronization Error", "Ok", () => {});
+                await _dialog.ShowAsync($"Could not read syncronized data because {ex.Message}", "Syncronization Error");
                 return new ServiceConfiguration[0];
             }
         }
 
-        public async Task SaveServiceConfigurations(IEnumerable<ServiceConfiguration> configurations)
+        public async Task<ServiceConfiguration[]> GetConfigurationsFromFileAsync(StorageFile file)
+        {
+            Stream fileStream = await file.OpenStreamForReadAsync();
+            string data = await _zipper.GetDataFromCompressedStreamAsync(fileStream);
+            return await _deserializer.DeserializeAsync(data);
+        }
+
+        public async Task SaveConfigurationsToFileAsync(IEnumerable<ServiceConfiguration> configurations, StorageFile storageFile)
         {
             string data = await _serializer.SerializeAsync(configurations.ToArray());
-            StorageFile storageFile = await GetOrCreateStorageFile();
-            Stream stream = await storageFile.OpenStreamForWriteAsync();
-            await _zipper.WriteCompressedDataToStream(stream, data);
+            using (Stream stream = await storageFile.OpenStreamForWriteAsync())
+            {
+                await _zipper.WriteCompressedDataToStreamAsync(stream, data);
+            }
+        }
+
+        public async Task SaveConfigurationsAsync(IEnumerable<ServiceConfiguration> configurations)
+        {
+            StorageFile file = await GetOrCreateStorageFile();
+            await SaveConfigurationsToFileAsync(configurations, file);
         }
 
         private async Task<StorageFile> GetOrCreateStorageFile()
@@ -81,18 +101,28 @@ namespace Rester.Service
         }
     }
 
-    internal class DesignServiceStore : IServiceStore
+    internal class DesignConfigurationStore : IConfigurationStore
     {
-        public Task<ServiceConfiguration[]> LoadServiceConfigurations()
+        public Task<ServiceConfiguration[]> LoadConfigurationsAsync()
         {
-            var serviceConfigurations = Enumerable.Range(0, 3).Select(CreateServiceConfiguration).ToList();
-            serviceConfigurations.Insert(0, CreateRealTestData());
-            return Task.FromResult(serviceConfigurations.ToArray());
+            var configurations = Enumerable.Range(0, 3).Select(CreateConfiguration).ToList();
+            configurations.Insert(0, CreateRealTestData());
+            return Task.FromResult(configurations.ToArray());
         }
 
-        public Task SaveServiceConfigurations(IEnumerable<ServiceConfiguration> configurations)
+        public Task SaveConfigurationsAsync(IEnumerable<ServiceConfiguration> configurations)
         {
             return Task.CompletedTask;
+        }
+
+        public Task SaveConfigurationsToFileAsync(IEnumerable<ServiceConfiguration> configurations, StorageFile storageFile)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task<ServiceConfiguration[]> GetConfigurationsFromFileAsync(StorageFile file)
+        {
+            return Task.FromResult(new ServiceConfiguration[0]);
         }
 
         private ServiceConfiguration CreateRealTestData()
@@ -119,7 +149,7 @@ namespace Rester.Service
         private static IActionInvokerFactory ActionInvokerFactory => SimpleIoc.Default.GetInstance<IActionInvokerFactory>();
         private static INavigationService NavigationService => SimpleIoc.Default.GetInstance<INavigationService>();
 
-        private static ServiceConfiguration CreateServiceConfiguration(int i)
+        private static ServiceConfiguration CreateConfiguration(int i)
         {
             var configuration = ServiceConfiguration.CreateSilently(
                 $"Service Config {i}", "http://myserviceurl:1234",
@@ -142,11 +172,5 @@ namespace Rester.Service
             return ServiceEndpointAction.CreateSilently($"Action with long name {i}",
                 "dostuff?a=b&c=d", "Get", "", "", configuration);
         }
-    }
-
-    internal interface IServiceStore
-    {
-        Task<ServiceConfiguration[]> LoadServiceConfigurations();
-        Task SaveServiceConfigurations(IEnumerable<ServiceConfiguration> configurations);
     }
 }

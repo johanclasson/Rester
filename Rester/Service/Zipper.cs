@@ -7,13 +7,13 @@ namespace Rester.Service
 {
     public interface IZipper
     {
-        Task WriteCompressedDataToStream(Stream streamToWriteTo, string data);
-        Task<string> GetDataFromCompressedStream(Stream compressedStream);
+        Task WriteCompressedDataToStreamAsync(Stream streamToWriteTo, string data);
+        Task<string> GetDataFromCompressedStreamAsync(Stream compressedStream);
     }
 
     internal class Zipper : IZipper
     {
-        public Task WriteCompressedDataToStream(Stream streamToWriteTo, string data)
+        public Task WriteCompressedDataToStreamAsync(Stream streamToWriteTo, string data)
         {
             return Task.Run(() =>
             {
@@ -25,7 +25,7 @@ namespace Rester.Service
             });
         }
 
-        public Task<string> GetDataFromCompressedStream(Stream compressedStream)
+        public Task<string> GetDataFromCompressedStreamAsync(Stream compressedStream)
         {
             return Task.Run(() =>
             {

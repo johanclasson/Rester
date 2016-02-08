@@ -9,18 +9,18 @@ namespace Rester.Service
     {
         private bool OnlyFromToday { get; set; }
 
-        public Task<bool> GetOnlyFromToday()
+        public Task<bool> GetOnlyFromTodayAsync()
         {
             return Task.FromResult(OnlyFromToday);
         }
 
-        public Task SetOnlyFromToday(bool value)
+        public Task SetOnlyFromTodayAsync(bool value)
         {
             OnlyFromToday = value;
             return Task.CompletedTask;
         }
 
-        public Task<HttpResponse[]> GetLogEntries()
+        public Task<HttpResponse[]> GetLogEntriesAsync()
         {
             return Task.FromResult(new HttpResponse[0]);
         }
@@ -30,18 +30,18 @@ namespace Rester.Service
     {
         private bool OnlyFromToday { get; set; } = true;
 
-        public Task<bool> GetOnlyFromToday()
+        public Task<bool> GetOnlyFromTodayAsync()
         {
             return Task.FromResult(OnlyFromToday);
         }
 
-        public Task SetOnlyFromToday(bool value)
+        public Task SetOnlyFromTodayAsync(bool value)
         {
             OnlyFromToday = value;
             return Task.CompletedTask;
         }
 
-        public Task<HttpResponse[]> GetLogEntries()
+        public Task<HttpResponse[]> GetLogEntriesAsync()
         {
             var entries = new List<HttpResponse>();
             bool isSuccessfulStatusCode = true;
@@ -68,8 +68,8 @@ pradda fladda",
 
     internal interface ILogStore
     {
-        Task<bool> GetOnlyFromToday();
-        Task SetOnlyFromToday(bool value);
-        Task<HttpResponse[]> GetLogEntries();
+        Task<bool> GetOnlyFromTodayAsync();
+        Task SetOnlyFromTodayAsync(bool value);
+        Task<HttpResponse[]> GetLogEntriesAsync();
     }
 }

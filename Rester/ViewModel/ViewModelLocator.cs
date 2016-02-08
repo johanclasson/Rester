@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Diagnostics.CodeAnalysis;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
@@ -15,21 +16,22 @@ namespace Rester.ViewModel
             var navigationService = CreateNavigationService();
 
             SimpleIoc.Default.Register(() => navigationService);
-            SimpleIoc.Default.Register<IDialogService, DialogService>();
+            SimpleIoc.Default.Register<IDialog, Dialog>();
             SimpleIoc.Default.Register<IActionInvokerFactory, ActionInvokerFactory>();
             SimpleIoc.Default.Register<IDeserializer, Deserializer>();
             SimpleIoc.Default.Register<ISerializer, Serializer>();
             SimpleIoc.Default.Register<IZipper, Zipper>();
+            SimpleIoc.Default.Register<IFilePicker, FilePicker>();
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                SimpleIoc.Default.Register<IServiceStore, DesignServiceStore>();
+                SimpleIoc.Default.Register<IConfigurationStore, DesignConfigurationStore>();
                 SimpleIoc.Default.Register<ILogStore, DesignLogStore>();
             }
             else
             {
-                //SimpleIoc.Default.Register<IServiceStore, DesignServiceStore>();
-                SimpleIoc.Default.Register<IServiceStore, ServiceStore>();
+                //SimpleIoc.Default.Register<IConfigurationStore, DesignConfigurationStore>();
+                SimpleIoc.Default.Register<IConfigurationStore, ConfigurationStore>();
                 SimpleIoc.Default.Register<ILogStore, LogStore>();
             }
 
@@ -46,12 +48,12 @@ namespace Rester.ViewModel
             return nc;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+        [SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+        [SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
         public LogViewModel Log => ServiceLocator.Current.GetInstance<LogViewModel>();

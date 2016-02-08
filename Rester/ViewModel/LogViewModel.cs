@@ -20,12 +20,12 @@ namespace Rester.ViewModel
 
         private async void LoadOnlyForToday()
         {
-            _showOnlyFromToday = await _logStore.GetOnlyFromToday();
+            _showOnlyFromToday = await _logStore.GetOnlyFromTodayAsync();
         }
 
         private async void LoadData()
         {
-            var entries = await _logStore.GetLogEntries();
+            var entries = await _logStore.GetLogEntriesAsync();
             LogEntries.ClearAndAddRange(entries);
         }
 
@@ -47,7 +47,7 @@ namespace Rester.ViewModel
 
         private async void ReloadData()
         {
-            await _logStore.SetOnlyFromToday(ShowOnlyFromToday);
+            await _logStore.SetOnlyFromTodayAsync(ShowOnlyFromToday);
             LoadData();
         }
     }

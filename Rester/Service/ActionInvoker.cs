@@ -10,7 +10,7 @@ namespace Rester.Service
 {
     public interface IActionInvoker
     {
-        Task<HttpResponse> InvokeRestAction();
+        Task<HttpResponse> InvokeRestActionAsync();
     }
 
     public interface IActionInvokerFactory
@@ -39,7 +39,7 @@ namespace Rester.Service
 
         private Uri Uri => new Uri(new Uri(_baseUri), _action.UriPath);
 
-        public async Task<HttpResponse> InvokeRestAction()
+        public async Task<HttpResponse> InvokeRestActionAsync()
         {
             // Not sure why this extra layer of async task is needed, but it is!
             return await Task.Run(async () =>

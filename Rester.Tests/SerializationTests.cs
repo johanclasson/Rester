@@ -10,7 +10,7 @@ namespace Rester.Tests
 {
     public class SerializationTests : ResterTestBase
     {
-        public const string SerializedServiceConfigurations = @"{
+        public const string SerializedConfigurations = @"{
   ""Version"": ""0.1"",
   ""Configurations"": [
     {
@@ -60,17 +60,17 @@ namespace Rester.Tests
                 .WithEndpoint(1, 2)
                 .WithEndpoint(2, 1);
             string result = await Serializer.SerializeAsync(new[] {configuration});
-            result.Should().Be(SerializedServiceConfigurations);
+            result.Should().Be(SerializedConfigurations);
         }
 
         [Fact]
         public async void ASerializedAndCompressedLargeConfiguration_ShouldBeSmallerThanTheRoamingStorageQuota()
         {
-            var configurations = BuildArrayOfServiceConfigurations(noConfigs: 10, noEndpoints: 20, noActions: 8);
+            var configurations = BuildArrayOfConfigurations(noConfigs: 10, noEndpoints: 20, noActions: 8);
             string data = await Serializer.SerializeAsync(configurations);
             using (var compressedStream = new MemoryStream())
             {
-                await Zipper.WriteCompressedDataToStream(compressedStream, data);
+                await Zipper.WriteCompressedDataToStreamAsync(compressedStream, data);
                 int actualNumberOfBytes = compressedStream.ToArray().Length;
                 // ApplicationData.RoamingStorageQuota is 100KB. For some reason that property cannot be accessed in the test project.
                 actualNumberOfBytes.Should().BeLessThan(100*1024);
@@ -80,7 +80,7 @@ namespace Rester.Tests
         [Fact]
         public async void DeserializingConfigurations_ShouldCreateTheExpectedObjects()
         {
-            var configurations = await Deserializer.DeserializeAsync(SerializedServiceConfigurations);
+            var configurations = await Deserializer.DeserializeAsync(SerializedConfigurations);
             configurations.Length.Should().Be(1);
             ServiceConfiguration configuration = configurations[0];
             configuration.Name.Should().Be("My configuration name");
