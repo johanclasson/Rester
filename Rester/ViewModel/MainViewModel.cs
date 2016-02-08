@@ -11,6 +11,7 @@ using Rester.Service;
 
 namespace Rester.ViewModel
 {
+    // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class MainViewModel : ViewModelBase
     {
         private readonly IConfigurationStore _configurationStore;

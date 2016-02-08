@@ -18,6 +18,7 @@ namespace Rester.Service
         IActionInvoker CreateInvoker(string baseUri, ServiceEndpointAction action);
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class ActionInvokerFactory : IActionInvokerFactory
     {
         public IActionInvoker CreateInvoker(string baseUri, ServiceEndpointAction action)

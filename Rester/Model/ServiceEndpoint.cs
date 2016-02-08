@@ -44,6 +44,8 @@ namespace Rester.Model
         public ObservableCollectionWithAddRange<ServiceEndpointAction> Actions { get; } = new ObservableCollectionWithAddRange<ServiceEndpointAction>();
 
         public ICommand AddActionCommand { get; }
+        // ReSharper disable once MemberCanBePrivate.Global - It is used by a child binding through element name
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public ICommand DeleteActionCommand { get; }
     }
 }

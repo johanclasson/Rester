@@ -5,6 +5,7 @@ using Rester.Service;
 
 namespace Rester.ViewModel
 {
+    // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class LogViewModel : ViewModelBase
     {
         private readonly ILogStore _logStore;

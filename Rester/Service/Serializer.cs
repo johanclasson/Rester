@@ -26,7 +26,7 @@ namespace Rester.Service
                 var jConfigArray = new JArray();
                 foreach (ServiceConfiguration configuration in configurations)
                 {
-                    JObject jConfig = SerializeServiceConfiguraion(configuration);
+                    JObject jConfig = SerializeConfiguration(configuration);
                     jConfigArray.Add(jConfig);
                 }
                 return new JObject
@@ -37,7 +37,7 @@ namespace Rester.Service
             });
         }
 
-        private static JObject SerializeServiceConfiguraion(ServiceConfiguration configuration)
+        private static JObject SerializeConfiguration(ServiceConfiguration configuration)
         {
             var jEndpointArray = new JArray();
             var jConfig = new JObject

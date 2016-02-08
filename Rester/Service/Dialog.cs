@@ -9,6 +9,7 @@ namespace Rester.Service
         Task<string> ShowAsync(string message, string title, string[] buttonLabels = null, uint cancelCommandIndex = 99999, uint defaultCommandIndex = 0);
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class Dialog : IDialog
     {
         public async Task<string> ShowAsync(string message, string title, string[] buttonLabels = null, uint cancelCommandIndex = 99999, uint defaultCommandIndex = 0)
