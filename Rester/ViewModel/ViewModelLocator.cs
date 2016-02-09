@@ -45,6 +45,7 @@ namespace Rester.ViewModel
             var nc = new NavigationService();
             nc.Configure(LogPage.Key, typeof(LogPage));
             nc.Configure(ActionPage.Key, typeof(ActionPage));
+            nc.Configure(AboutPage.Key, typeof(AboutPage));
             return nc;
         }
 

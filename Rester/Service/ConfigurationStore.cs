@@ -21,7 +21,7 @@ namespace Rester.Service
     // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class ConfigurationStore : IConfigurationStore
     {
-        private const string ResterDbFilename = "rester.db";
+        private const string ResterDbFilename = "rester.rdb";
         private readonly IZipper _zipper;
         private readonly IDeserializer _deserializer;
         private readonly ISerializer _serializer;
@@ -129,13 +129,13 @@ namespace Rester.Service
 
         private ServiceConfiguration CreateRealTestData()
         {
-            var configuration = ServiceConfiguration.CreateSilently("Domoticz", "http://mediamonstret:8070",
+            var configuration = ServiceConfiguration.CreateSilently("Domoticz", "http://mediacomputer:8080",
                 NavigationService, ActionInvokerFactory);
             ServiceEndpointAction[] actions =
             {
-                ServiceEndpointAction.CreateSilently("På", "json.htm?type=command&param=switchlight&idx=1&switchcmd=Set%20Level&level=15", 
+                ServiceEndpointAction.CreateSilently("On", "json.htm?type=command&param=switchlight&idx=1&switchcmd=Set%20Level&level=15", 
                 "Get", "", "", () => configuration.BaseUri),
-                ServiceEndpointAction.CreateSilently("Av", "json.htm?type=command&param=switchlight&idx=1&switchcmd=Off",
+                ServiceEndpointAction.CreateSilently("Off", "json.htm?type=command&param=switchlight&idx=1&switchcmd=Off",
                 "Get", "", "", () => configuration.BaseUri)
             };
             var serviceEndpoint = ServiceEndpoint.CreateSilently("Dining Room", configuration, NavigationService);

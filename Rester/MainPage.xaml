@@ -31,6 +31,7 @@
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="Import..." Command="{Binding ImportConfigurationsCommand}" />
                 <AppBarButton Label="Export..." Command="{Binding ExportConfigurationsCommand}" />
+                <AppBarButton Label="About" Command="{Binding NavigateToAboutPageCommand}" />
             </CommandBar.SecondaryCommands>
             <AppBarButton Icon="Add" Label="Add Service" Command="{Binding AddConfigurationCommand}"
                           Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}" />

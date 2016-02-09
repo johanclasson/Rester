@@ -42,6 +42,7 @@ namespace Rester.ViewModel
             AddConfigurationCommand = new RelayCommand(AddEmptyServiceConfiguration);
             ExportConfigurationsCommand = new RelayCommand(async () => await ExportConfigurationsAsync());
             ImportConfigurationsCommand = new RelayCommand(async () => await PickFileAndImportSerficeConfigurationsAsync());
+            NavigateToAboutPageCommand = new RelayCommand(() => _navigationService.NavigateTo(AboutPage.Key));
         }
 
         private Task ExportConfigurationsAsync()
@@ -139,5 +140,6 @@ namespace Rester.ViewModel
         public ICommand AddConfigurationCommand { get; }
         public ICommand ExportConfigurationsCommand { get; }
         public ICommand ImportConfigurationsCommand { get; }
+        public ICommand NavigateToAboutPageCommand { get; }
     }
 }
