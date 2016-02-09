@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -28,7 +30,8 @@ namespace Rester.ViewModel
             _invokerFactory = invokerFactory;
             _dialog = dialog;
             _filePicker = filePicker;
-            LoadDataAsync();
+            LoadData();
+            _dispatcher = Window.Current.Dispatcher;
             InitHandlers();
             Messenger.Default.Register<SomethingIsChangedMessage>(this, async _ => await StoreDataAsync());
             NavigateToLogCommand = new RelayCommand(() => _navigationService.NavigateTo(LogPage.Key));
@@ -43,6 +46,11 @@ namespace Rester.ViewModel
             ExportConfigurationsCommand = new RelayCommand(async () => await ExportConfigurationsAsync());
             ImportConfigurationsCommand = new RelayCommand(async () => await PickFileAndImportSerficeConfigurationsAsync());
             NavigateToAboutPageCommand = new RelayCommand(() => _navigationService.NavigateTo(AboutPage.Key));
+        }
+
+        private async void LoadData()
+        {
+            await LoadDataAsync();
         }
 
         private Task ExportConfigurationsAsync()
@@ -103,14 +111,15 @@ namespace Rester.ViewModel
 
         void InitHandlers()
         {
-            ApplicationData.Current.DataChanged += (_, __) =>
+            ApplicationData.Current.DataChanged += async (_, __) =>
             {
-                //TODO: Is this method called also when the current app saves data to the roaming store?
-                LoadDataAsync();
+                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => {
+                    await LoadDataAsync();
+                });
             };
         }
 
-        private async void LoadDataAsync()
+        private async Task LoadDataAsync()
         {
             var configs = await _configurationStore.LoadConfigurationsAsync();
             Configurations.ClearAndAddRange(configs);
@@ -132,6 +141,7 @@ namespace Rester.ViewModel
         }
 
         private bool _editMode;
+        private readonly CoreDispatcher _dispatcher;
 
         public ICommand NavigateToLogCommand { get; }
         public ICommand EditModeCommand { get; }

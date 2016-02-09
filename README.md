@@ -35,6 +35,7 @@ The implementation of Rester is a still in progress. Because of that, you will f
 	4. Zip the file, and make sure to select GZip as compression method.
 	5. Import your data.
 * Authentication is not supported. For Basic Authentication there is a work around. Put the username and password in the url like this: http://{username}:{password}@myservice.com/mypath.
+* Data synchronization speed is quite slow. Excpect that it will take around 5-15 minutes (or even longer in some cases) before all devices have been updated.
 
 ## How Can You Contribute
 
