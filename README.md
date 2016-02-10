@@ -4,13 +4,13 @@ Have you ever wished for a rest client that is easy to use on your windows phone
 
 ## Features
 
-* **Responsive design:** No matter what your screen size is, Rester will try to layout its buttons in an efficient manner.
 * **Visual Feedback:** Get indications of when a request is started and when it has ended.
 * **Synchronize Configured Services:** Data will be synchronized between all your devices which are connected to the same Microsoft Account.
 * **Detailed Log:** All requests and responses are logged with detailed information about the outcome. (*)
-* **Multiple Service Calls:** Run many service calls in parallel.
-* **Import and Export Configured Services:** This can be used for backup purposes, or if you want to share your configuration with other people. When importing data you can choose to add the configured services to your collection of services, or to let them replace them entirely.
+* **Multiple Service Requests:** Run many service calls in parallel.
+* **Import and Export Configured Services:** This can be used for backup purposes, or if you want to share your configuration with other people. When importing data you can choose to add the configured services to your collection of services, or to let them replace your collection entirely.
 * **Open Source:** If you miss a feature, you can contribute it yourself. 
+* **Responsive design:** No matter what your screen size is, Rester will try to layout its buttons in an efficient manner.
 
 (* Se current limitations)
 
@@ -24,7 +24,7 @@ An action contains the request details such as uri path, method, body and conten
 
 ## Current Limitations
 
-The implementation of Rester is a still in progress. Because of that, you will find that some features are missing. The most important ones that are not done (*yet!*) are:
+The implementation of Rester is still in progress. Because of that, you will find that some features are missing. The most important ones that are not done (*yet!*) are:
 
 * Logs are not persisted.
 * Although detailed information is logged, it is not displayed in the user interface.
