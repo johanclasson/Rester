@@ -1,5 +1,7 @@
 ﻿using System;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
+using Rester.Control;
 
 namespace Rester.Model
 {
@@ -39,6 +41,7 @@ namespace Rester.Model
         private ServiceEndpointAction(Func<string> getBaseUri, bool editMode) : base(editMode)
         {
             GetBaseUri = getBaseUri;
+            Messenger.Default.Register<UpdateButtonSizeMessage>(this, message => ButtonSize = message.Size);
         }
 
         public string Name { get { return _name; } set { SetAndSave(nameof(Name), ref _name, value); } }
@@ -70,5 +73,9 @@ namespace Rester.Model
                 return baseUri + "/";
             }
         }
+
+        public double ButtonSize { get { return _buttonSize; } set { Set(nameof(ButtonSize), ref _buttonSize, value); } }
+        private double _buttonSize = 100;
+
     }
 }

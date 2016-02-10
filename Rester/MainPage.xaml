@@ -169,7 +169,8 @@
                                                             <Button
                                                                 Command="{Binding DataContext.InvokeUriCommand, ElementName=ServiceConfiguration}"
                                                                 CommandParameter="{Binding}"
-                                                                Width="96" Height="96">
+                                                                Width="{Binding ButtonSize}"
+                                                                Height="{Binding ButtonSize}">
                                                                 <TextBlock Text="{Binding Name}"
                                                                            TextWrapping="WrapWholeWords"
                                                                            TextAlignment="Center" />
