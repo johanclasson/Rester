@@ -115,7 +115,9 @@
                                         </Button>
                                     </Grid>
                                     <TextBox Text="{Binding BaseUri, Mode=TwoWay}"
-                                             PlaceholderText="http://myservice.com:1234" VerticalAlignment="Center" />
+                                             PlaceholderText="http://myservice.com:1234"
+                                             VerticalAlignment="Center"
+                                             InputScope="Url" />
                                 </StackPanel>
                             </Grid>
                             <ListView Grid.Row="1" ItemsSource="{Binding Endpoints}"
