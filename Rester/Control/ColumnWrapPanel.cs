@@ -5,24 +5,33 @@ using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Messaging;
+using static Rester.Control.Constants;
 
 namespace Rester.Control
 {
+    internal static class Constants
+    {
+        //TODO: Remove constants construct and make them settable from Xaml on the ColumnWrapPanel
+        public const double ButtonMaxSize = 110.0;
+        public const double AdditionalMargin = 80;
+        public const double ButtonMargin = 4;
+        public const int ColumnTargetSize = 300;
+    }
+
     internal class UpdateButtonSizeMessage
     {
         public double Size { get; }
+        public double ColumnWidth { get; }
 
-        public UpdateButtonSizeMessage(double size)
+        public UpdateButtonSizeMessage(double size, double columnWidth)
         {
             Size = size;
+            ColumnWidth = columnWidth;
         }
     }
 
     internal class ButtonSizeCalculator
     {
-        //TODO: Make constants settable from Xaml
-        private const double ButtonMaxSize = 110.0;
-
         internal class ButtonSizePoint
         {
             public ButtonSizePoint(double columnWidth, int buttonCount)
@@ -37,7 +46,7 @@ namespace Rester.Control
             public int ButtonCount { get; }
         }
 
-        private List<ButtonSizePoint> Points { get; } = new List<ButtonSizePoint>(); 
+        private List<ButtonSizePoint> Points { get; } = new List<ButtonSizePoint>();
 
         public ButtonSizeCalculator()
         {
@@ -59,9 +68,7 @@ namespace Rester.Control
 
         private static double GetMargin(int buttonCount)
         {
-            const double additionalMargin = 89;
-            const double buttonMargin = 2;
-            return additionalMargin + buttonCount * buttonMargin;
+            return AdditionalMargin + buttonCount*ButtonMargin;
         }
 
         public double GetButtonSize(double columnWidth)
@@ -86,13 +93,12 @@ namespace Rester.Control
             Debug.Assert(p2 != null, "p2 != null");
             double k = (p2.Size - p1.Size)/(p2.ColumnWidth - p1.ColumnWidth);
             double m = p1.Size - k*p1.ColumnWidth;
-            return  k * columnWidth + m;
+            return k*columnWidth + m;
         }
     }
 
     internal class ColumnWrapPanel : Panel
     {
-        private const int ColumnTargetSize = 300;
         private ButtonSizeCalculator Calculator { get; } = new ButtonSizeCalculator();
 
         private int GetColumnCount(Size size)
@@ -111,7 +117,7 @@ namespace Rester.Control
             var columnHeights = new double[columnCount];
             var columnWidth = availableSize.Width/columnCount;
             double buttonSize = Calculator.GetButtonSize(columnWidth);
-            Messenger.Default.Send(new UpdateButtonSizeMessage(buttonSize));
+            Messenger.Default.Send(new UpdateButtonSizeMessage(buttonSize, columnWidth));
             foreach (var child in Children)
             {
                 child.Measure(new Size(columnWidth, availableSize.Height));

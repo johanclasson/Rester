@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
@@ -8,8 +9,10 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Views;
+using Rester.Control;
 using Rester.Model;
 using Rester.Service;
+using static Rester.Control.Constants;
 
 namespace Rester.ViewModel
 {
@@ -34,6 +37,7 @@ namespace Rester.ViewModel
             _dispatcher = Window.Current.Dispatcher;
             InitHandlers();
             Messenger.Default.Register<SomethingIsChangedMessage>(this, async _ => await StoreDataAsync());
+            Messenger.Default.Register<UpdateButtonSizeMessage>(this, UpdateButtonSizes);
             NavigateToLogCommand = new RelayCommand(() => _navigationService.NavigateTo(LogPage.Key));
             EditModeCommand = new RelayCommand(() => EditMode = true);
             EditCompletedCommand = new RelayCommand(() => EditMode = false);
@@ -123,6 +127,31 @@ namespace Rester.ViewModel
         {
             var configs = await _configurationStore.LoadConfigurationsAsync();
             Configurations.ClearAndAddRange(configs);
+        }
+
+        private void UpdateButtonSizes(UpdateButtonSizeMessage message)
+        {
+            double buttonSize = message.Size;
+            int maximumActionsInEndpoint = GetMaximumActionsInEndpoint();
+            double largestPossibleButtonArray = maximumActionsInEndpoint*(ButtonMaxSize + ButtonMargin) + AdditionalMargin;
+            if (largestPossibleButtonArray < message.ColumnWidth)
+            {
+                buttonSize = ButtonMaxSize;
+            }
+            var allActions = Configurations.SelectMany(c => c.Endpoints.SelectMany(e => e.Actions));
+            foreach (ServiceEndpointAction action in allActions)
+            {
+                if (Math.Abs(action.ButtonSize - buttonSize) > double.Epsilon)
+                    action.ButtonSize = buttonSize;
+            }
+        }
+
+        private int GetMaximumActionsInEndpoint()
+        {
+            var actions = Configurations.SelectMany(c => c.Endpoints.Select(e => e.Actions.Count)).ToArray();
+            if (!actions.Any())
+                return 0;
+            return actions.Max();
         }
 
         public ObservableCollectionWithAddRange<ServiceConfiguration> Configurations { get; } = new ObservableCollectionWithAddRange<ServiceConfiguration>();
