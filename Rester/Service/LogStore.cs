@@ -9,6 +9,7 @@ namespace Rester.Service
     internal class LogStore : ILogStore
     {
         private bool OnlyFromToday { get; set; }
+        private List<HttpResponse> Logs { get; } = new List<HttpResponse>(); 
 
         public Task<bool> GetOnlyFromTodayAsync()
         {
@@ -23,7 +24,13 @@ namespace Rester.Service
 
         public Task<HttpResponse[]> GetLogEntriesAsync()
         {
-            return Task.FromResult(new HttpResponse[0]);
+            return Task.FromResult(Logs.ToArray());
+        }
+
+        public Task AddAsync(HttpResponse logEntry)
+        {
+            Logs.Insert(0, logEntry);
+            return Task.CompletedTask;
         }
     }
 
@@ -66,6 +73,11 @@ jadda jadda",
             }
             return Task.FromResult(entries.ToArray());
         }
+
+        public Task AddAsync(HttpResponse logEntry)
+        {
+            return Task.CompletedTask;
+        }
     }
 
     internal interface ILogStore
@@ -73,5 +85,6 @@ jadda jadda",
         Task<bool> GetOnlyFromTodayAsync();
         Task SetOnlyFromTodayAsync(bool value);
         Task<HttpResponse[]> GetLogEntriesAsync();
+        Task AddAsync(HttpResponse logEntry);
     }
 }

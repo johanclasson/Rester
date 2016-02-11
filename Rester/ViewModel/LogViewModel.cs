@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using Rester.Model;
@@ -13,10 +14,15 @@ namespace Rester.ViewModel
         public LogViewModel(ILogStore logStore)
         {
             _logStore = logStore;
-            Messenger.Default.Register<NotificationMessage<HttpResponse>>(this,
-                message => LogEntries.Insert(0, message.Content));
+            Messenger.Default.Register<NotificationMessage<HttpResponse>>(this, async message=> await AddLogEntry(message.Content));
             LoadOnlyForToday();
             LoadData();
+        }
+
+        private async Task AddLogEntry(HttpResponse logEntry)
+        {
+            LogEntries.Insert(0, logEntry);
+            await _logStore.AddAsync(logEntry);
         }
 
         private async void LoadOnlyForToday()
