@@ -18,7 +18,7 @@
         <StackPanel Orientation="Horizontal"
                     Background="{ThemeResource ContentDialogBorderThemeBrush}"
                     Grid.Row="0">
-            <Image Source="Assets/Square150x150Logo.scale-400.png" Width="70" Margin="0,0,10,0" />
+            <Image Source="Assets/Square150x150Logo.scale-200.png" Width="70" Margin="0,0,10,0" />
             <TextBlock Text="About"
                        Style="{StaticResource HeaderTextBlockStyle}" />
         </StackPanel>
