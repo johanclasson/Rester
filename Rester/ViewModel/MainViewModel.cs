@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
@@ -85,21 +87,29 @@ namespace Rester.ViewModel
                 await _dialog.ShowAsync($"Could not read data because {ex.Message}", "Import Error");
                 return;
             }
-            string pluralS = configurations.Length > 1 ? "s" : "";
-            var message = $"Found configurations for {configurations.Length} service{pluralS}. " +
-                          "Do you want to replace the currently configured services, or have the new services added to to them?";
-            string answer =
-                await _dialog.ShowAsync(message, "File content parsed correctly", new[] {"Add", "Replace", "Cancel"});
-            switch (answer)
+            var sb = new StringBuilder();
+            sb.AppendLine($"Found configurations for {configurations.Length} service{GetPluralS(configurations)}. ");
+            foreach (ServiceConfiguration configuration in configurations)
             {
-                case "Replace":
-                    Configurations.ClearAndAddRange(configurations);
-                    break;
-                case "Add":
-                    Configurations.AddRange(configurations);
-                    break;
+                var actions = configuration.Endpoints.SelectMany(e => e.Actions).ToArray();
+                sb.AppendLine($" - {configuration.Name} ({actions.Length} action{GetPluralS(actions)})");
             }
+            sb.Append("Do you want to proceed?");
+            string answer = await _dialog.ShowAsync(sb.ToString(), "File content parsed correctly", "Import", "Cancel");
+            if (answer == "Cancel")
+                return;
+            var message = "Do you want to replace the currently configured services, or have the new services added to to them?";
+            answer = await _dialog.ShowAsync(message, "Import Configurations", "Replace", "Add");
+            if (answer == "Replace")
+                Configurations.ClearAndAddRange(configurations);
+            else
+                Configurations.AddRange(configurations);
             await StoreDataAsync();
+        }
+
+        private static string GetPluralS<T>(IEnumerable<T> configurations)
+        {
+            return configurations.Count() == 1 ? "" : "s";
         }
 
         private async void AddEmptyServiceConfiguration()

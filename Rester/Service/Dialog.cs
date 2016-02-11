@@ -6,26 +6,26 @@ namespace Rester.Service
 {
     internal interface IDialog
     {
-        Task<string> ShowAsync(string message, string title, string[] buttonLabels = null, uint cancelCommandIndex = 99999, uint defaultCommandIndex = 0);
+        Task<string> ShowAsync(string message, string title, string defaultCommad = null, string cancelCommand = null);
     }
 
     // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class Dialog : IDialog
     {
-        public async Task<string> ShowAsync(string message, string title, string[] buttonLabels = null, uint cancelCommandIndex = 99999, uint defaultCommandIndex = 0)
+        // Windows 10 Mobile throws Argument Exception if more than two commands are used
+        public async Task<string> ShowAsync(string message, string title, string defaultCommad = null, string cancelCommand = null)
         {
-            if (buttonLabels == null || buttonLabels.Length == 0)
-                buttonLabels = new[] {"Ok"};
-            if (cancelCommandIndex == 99999)
-                cancelCommandIndex = (uint)buttonLabels.Length - 1;
+            if (defaultCommad == null)
+                defaultCommad = "Ok";
             var dialog = new MessageDialog(message, title)
             {
-                CancelCommandIndex = cancelCommandIndex,
-                DefaultCommandIndex = defaultCommandIndex
+                DefaultCommandIndex = 0
             };
-            foreach (string label in buttonLabels)
+            dialog.Commands.Add(new UICommand(defaultCommad));
+            if (cancelCommand != null)
             {
-                dialog.Commands.Add(new UICommand(label));
+                dialog.Commands.Add(new UICommand(cancelCommand));
+                dialog.CancelCommandIndex = 1;
             }
             var result = await dialog.ShowAsync();
             return result.Label;
