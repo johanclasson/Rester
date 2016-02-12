@@ -1,6 +1,10 @@
 # Rester
 
-Have you ever wished for a rest client that is easy to use on your windows phone? That is also available on your windows computer? With the same configured data? Then Rester is the rest client for you.
+Have you ever wished for a REST client that is easy to use on your windows phone? That is also available on your Windows computer? With the same configured data? Then Rester is the rest client for you.
+
+Rester is a multi-purpose REST client. It lets you configure actions for your services, so you can then invoke one of those by just pressing a button. If you use Rester on many devices which are connected to the same Microsoft account, your configured service actions will be kept up to date on all of them. All without any need for additional setup.
+
+Rester is an Open Source project, so if you miss a feature and have the right skills, you can implement it yourself. See how you can contribute in the project website. 
 
 ## Features
 
@@ -8,7 +12,8 @@ Have you ever wished for a rest client that is easy to use on your windows phone
 * **Synchronize Configured Services:** Data will be synchronized between all your devices which are connected to the same Microsoft Account.
 * **Detailed Log:** All requests and responses are logged with detailed information about the outcome. (*)
 * **Multiple Service Requests:** Run many service calls in parallel.
-* **Import and Export Configured Services:** This can be used for backup purposes, or if you want to share your configuration with other people. When importing data you can choose to add the configured services to your collection of services, or to let them replace your collection entirely.
+* **Export Configured Service Actions:** This can be used for backup purposes, or if you want to share your configuration with other people.
+* **Import Service Actions:** When importing data you can choose to add the configured services to your collection of services, or to let them replace your collection entirely.
 * **Open Source:** If you miss a feature, you can contribute it yourself. 
 * **Responsive design:** No matter what your screen size is, Rester will try to layout its buttons in an efficient manner.
 
@@ -18,9 +23,9 @@ Have you ever wished for a rest client that is easy to use on your windows phone
 
 Rester contains a number of *service configurations*. A service configuration contains the root uri to a service, together with authentication options (*).
 
-A service configuration contains a number of *endpoints*. An endpoint is just a logical grouping of *actions*.
+A service configuration contains a number of *action groups*. An action group is just a container so that related *actions* can be grouped together.
 
-An action contains the request details such as uri path, method, body and content type.
+An action contains the request details such as URI path, method, body and content type.
 
 ## Current Limitations
 
@@ -34,8 +39,8 @@ The implementation of Rester is still in progress. Because of that, you will fin
 	3. Edit the json-data with a text editor.
 	4. Zip the file, and make sure to select GZip as compression method.
 	5. Import your data.
-* Authentication is not supported. For Basic Authentication there is a work around. Put the username and password in the url like this: http://{username}:{password}@myservice.com/mypath.
-* Data synchronization speed is quite slow. Excpect that it will take around 5-15 minutes (or even longer in some cases) before all devices have been updated.
+* Authentication is not supported. For Basic Authentication there is a work around. Put the username and password in the URL like this: http://{username}:{password}@myservice.com/mypath.
+* Data synchronization speed is quite slow. Expect that it will take around 5-15 minutes (or even longer in some cases) before all devices have been updated.
 
 ## How Can You Contribute
 
