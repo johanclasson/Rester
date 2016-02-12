@@ -39,38 +39,38 @@ namespace Rester.Service
 
         private static JObject SerializeConfiguration(ServiceConfiguration configuration)
         {
-            var jEndpointArray = new JArray();
+            var jActionGroupArray = new JArray();
             var jConfig = new JObject
             {
                 ["Name"] = configuration.Name,
                 ["BaseUri"] = configuration.BaseUri,
-                ["Endpoints"] = jEndpointArray
+                ["ActionGroups"] = jActionGroupArray
             };
-            foreach (ServiceEndpoint endpoint in configuration.Endpoints)
+            foreach (ActionGroup actionGroup in configuration.ActionGroups)
             {
-                JObject jEndpoint = SerializeEndpoint(endpoint);
-                jEndpointArray.Add(jEndpoint);
+                JObject jActionGroup = SerializeActionGroup(actionGroup);
+                jActionGroupArray.Add(jActionGroup);
             }
             return jConfig;
         }
 
-        private static JObject SerializeEndpoint(ServiceEndpoint endpoint)
+        private static JObject SerializeActionGroup(ActionGroup actionGroup)
         {
             var jActionArray = new JArray();
-            var jEndpoint = new JObject
+            var jActionGroup = new JObject
             {
-                ["Name"] = endpoint.Name,
+                ["Name"] = actionGroup.Name,
                 ["Actions"] = jActionArray
             };
-            foreach (ServiceEndpointAction action in endpoint.Actions)
+            foreach (ServiceAction action in actionGroup.Actions)
             {
                 JObject jAction = SerializeAction(action);
                 jActionArray.Add(jAction);
             }
-            return jEndpoint;
+            return jActionGroup;
         }
 
-        private static JObject SerializeAction(ServiceEndpointAction action)
+        private static JObject SerializeAction(ServiceAction action)
         {
             var jAction = new JObject
             {
@@ -109,21 +109,21 @@ namespace Rester.Service
             var configuration = ServiceConfiguration.CreateSilently(
                 jConfig.Get("Name"), jConfig.Get("BaseUri"),
                 _navigationService, _invokerFactory);
-            var endpoints = jConfig.GetJArray("Endpoints").Select(j => CreateEndpoint(j, configuration));
-            configuration.Endpoints.AddRange(endpoints);
+            var actionGroups = jConfig.GetJArray("ActionGroups").Select(j => CreateActionGroup(j, configuration));
+            configuration.ActionGroups.AddRange(actionGroups);
             return configuration;
         }
 
-        private ServiceEndpoint CreateEndpoint(JObject jEndpoint, ServiceConfiguration configuration)
+        private ActionGroup CreateActionGroup(JObject jActionGroup, ServiceConfiguration configuration)
         {
-            var endpoint = ServiceEndpoint.CreateSilently(jEndpoint.Get("Name"), configuration, _navigationService);
-            endpoint.Actions.AddRange(jEndpoint.GetJArray("Actions").Select(j => CreateAction(j, configuration)));
-            return endpoint;
+            var actionGroup = ActionGroup.CreateSilently(jActionGroup.Get("Name"), configuration, _navigationService);
+            actionGroup.Actions.AddRange(jActionGroup.GetJArray("Actions").Select(j => CreateAction(j, configuration)));
+            return actionGroup;
         }
 
-        private ServiceEndpointAction CreateAction(JObject jAction, ServiceConfiguration configuration)
+        private ServiceAction CreateAction(JObject jAction, ServiceConfiguration configuration)
         {
-            return ServiceEndpointAction.CreateSilently(
+            return ServiceAction.CreateSilently(
                 jAction.Get("Name"), jAction.Get("UriPath"),
                 jAction.Get("Method"), jAction.Get("Body"),
                 jAction.Get("MediaType"), () => configuration.BaseUri);

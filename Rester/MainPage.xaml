@@ -120,14 +120,14 @@
                                              InputScope="Url" />
                                 </StackPanel>
                             </Grid>
-                            <ListView Grid.Row="1" ItemsSource="{Binding Endpoints}"
+                            <ListView Grid.Row="1" ItemsSource="{Binding ActionGroups}"
                                       SelectionMode="None"
                                       IsItemClickEnabled="False">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <!-- Endpoint -->
+                                        <!-- Action Group -->
                                         <StackPanel Orientation="Vertical" Margin="0,0,0,10"
-                                                    x:Name="Endpoint">
+                                                    x:Name="ActionGroup">
                                             <Grid CornerRadius="5"
                                                   Background="{ThemeResource ContentDialogBorderThemeBrush}"
                                                   Margin="0,4,0,4">
@@ -147,9 +147,9 @@
                                                     <!-- Binding to Service Configuration -->
                                                     <TextBox Grid.Column="0"
                                                              Text="{Binding Name, Mode=TwoWay}"
-                                                             PlaceholderText="Endpoint Name" />
+                                                             PlaceholderText="Group Name" />
                                                     <Button Grid.Column="1"
-                                                            Command="{Binding DataContext.DeleteEndpointCommand, ElementName=ServiceConfiguration}"
+                                                            Command="{Binding DataContext.DeleteActionGroupCommand, ElementName=ServiceConfiguration}"
                                                             CommandParameter="{Binding}"
                                                             Background="{ThemeResource ContentDialogBorderThemeBrush}">
                                                         <SymbolIcon Symbol="Delete" />
@@ -179,7 +179,7 @@
                                                             </Button>
                                                             <Button
                                                                 Background="{ThemeResource ContentDialogBorderThemeBrush}"
-                                                                Command="{Binding DataContext.DeleteActionCommand, ElementName=Endpoint}"
+                                                                Command="{Binding DataContext.DeleteActionCommand, ElementName=ActionGroup}"
                                                                 CommandParameter="{Binding}"
                                                                 Margin="-40,0,0,0"
                                                                 VerticalAlignment="Top"
@@ -198,11 +198,11 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                            <Button Grid.Row="2" Content="Add Endpoint"
+                            <Button Grid.Row="2" Content="Add Group"
                                     Background="{ThemeResource ContentDialogBorderThemeBrush}"
                                     HorizontalAlignment="Right"
                                     Margin="0,0,18,0"
-                                    Command="{Binding AddEndpointCommand}"
+                                    Command="{Binding AddActionGroupCommand}"
                                     Visibility="{Binding EditMode, Converter={StaticResource BoolToVis}}" />
                         </Grid>
                     </DataTemplate>

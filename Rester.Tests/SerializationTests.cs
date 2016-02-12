@@ -16,9 +16,9 @@ namespace Rester.Tests
     {
       ""Name"": ""My configuration name"",
       ""BaseUri"": ""http://baseuri"",
-      ""Endpoints"": [
+      ""ActionGroups"": [
         {
-          ""Name"": ""My endpoint name 1"",
+          ""Name"": ""My action group name 1"",
           ""Actions"": [
             {
               ""Name"": ""My action name 1"",
@@ -37,7 +37,7 @@ namespace Rester.Tests
           ]
         },
         {
-          ""Name"": ""My endpoint name 2"",
+          ""Name"": ""My action group name 2"",
           ""Actions"": [
             {
               ""Name"": ""My action name 1"",
@@ -57,8 +57,8 @@ namespace Rester.Tests
         public async void ServiceConfiguration_ShouldBeSerializedToCorrectJson()
         {
             ServiceConfiguration configuration = CreateBuilder()
-                .WithEndpoint(1, 2)
-                .WithEndpoint(2, 1);
+                .WithGroup(1, 2)
+                .WithGroup(2, 1);
             string result = await Serializer.SerializeAsync(new[] {configuration});
             result.Should().Be(SerializedConfigurations);
         }
@@ -66,7 +66,7 @@ namespace Rester.Tests
         [Fact]
         public async void ASerializedAndCompressedLargeConfiguration_ShouldBeSmallerThanTheRoamingStorageQuota()
         {
-            var configurations = BuildArrayOfConfigurations(noConfigs: 10, noEndpoints: 20, noActions: 8);
+            var configurations = BuildArrayOfConfigurations(noConfigs: 10, noGroups: 20, noActions: 8);
             string data = await Serializer.SerializeAsync(configurations);
             using (var compressedStream = new MemoryStream())
             {
@@ -85,19 +85,19 @@ namespace Rester.Tests
             ServiceConfiguration configuration = configurations[0];
             configuration.Name.Should().Be("My configuration name");
             configuration.BaseUri.Should().Be("http://baseuri");
-            configuration.Endpoints.Count.Should().Be(2);
+            configuration.ActionGroups.Count.Should().Be(2);
 
-            AssertEndpoint(configuration.Endpoints, endpointIndex: 0, noActions: 2);
+            AssertActionGroup(configuration.ActionGroups, actionGroupIndex: 0, noActions: 2);
         }
 
-        private void AssertEndpoint(IList<ServiceEndpoint> endpoints, int endpointIndex, int noActions)
+        private void AssertActionGroup(IList<ActionGroup> actionGroups, int actionGroupIndex, int noActions)
         {
-            ServiceEndpoint endpoint = endpoints[endpointIndex];
-            endpoint.Name.Should().Be($"My endpoint name {endpointIndex + 1}");
-            endpoint.Actions.Count.Should().Be(noActions, "Number of actions");
+            ActionGroup actionGroup = actionGroups[actionGroupIndex];
+            actionGroup.Name.Should().Be($"My action group name {actionGroupIndex + 1}");
+            actionGroup.Actions.Count.Should().Be(noActions, "Number of actions");
             for (int i = 0; i < noActions; i++)
             {
-                var action = endpoint.Actions[i];
+                var action = actionGroup.Actions[i];
                 action.BaseUri.Should().Be("http://baseuri/");
                 int actionNumber = i + 1;
                 action.Name.Should().Be($"My action name {actionNumber}");

@@ -5,33 +5,33 @@ using Rester.Service;
 
 namespace Rester.Model
 {
-    public class ServiceEndpoint : AbstractResterModel
+    public class ActionGroup : AbstractResterModel
     {
         private readonly ServiceConfiguration _configuration;
         private readonly INavigationService _navigationService;
 
-        public static ServiceEndpoint CreateSilently(string name, ServiceConfiguration configuration,
+        public static ActionGroup CreateSilently(string name, ServiceConfiguration configuration,
             INavigationService navigationService, bool editMode = false)
         {
-            return new ServiceEndpoint(configuration, navigationService, editMode)
+            return new ActionGroup(configuration, navigationService, editMode)
             {
                 _name = name
             };
         }
 
-        private ServiceEndpoint(ServiceConfiguration configuration, INavigationService navigationService, bool editMode) : base(editMode)
+        private ActionGroup(ServiceConfiguration configuration, INavigationService navigationService, bool editMode) : base(editMode)
         {
             _configuration = configuration;
             _navigationService = navigationService;
             AddActionCommand = new RelayCommand(() =>
             {
-                var action = ServiceEndpointAction.CreateSilently("", "", "Get", "", "application/json",
+                var action = ServiceAction.CreateSilently("", "", "Get", "", "application/json",
                     () => _configuration.BaseUri, EditMode);
                 Actions.Add(action);
                 NotifyThatSomethingIsChanged();
                 _navigationService.NavigateTo(ActionPage.Key, action);
             });
-            DeleteActionCommand = new RelayCommand<ServiceEndpointAction>(action =>
+            DeleteActionCommand = new RelayCommand<ServiceAction>(action =>
             {
                 Actions.Remove(action);
                 NotifyThatSomethingIsChanged();
@@ -41,7 +41,7 @@ namespace Rester.Model
         public string Name { get { return _name; } set { SetAndSave(nameof(Name), ref _name, value); } }
         private string _name;
 
-        public ObservableCollectionWithAddRange<ServiceEndpointAction> Actions { get; } = new ObservableCollectionWithAddRange<ServiceEndpointAction>();
+        public ObservableCollectionWithAddRange<ServiceAction> Actions { get; } = new ObservableCollectionWithAddRange<ServiceAction>();
 
         public ICommand AddActionCommand { get; }
         // ReSharper disable once MemberCanBePrivate.Global - It is used by a child binding through element name

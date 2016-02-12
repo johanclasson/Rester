@@ -15,13 +15,13 @@ namespace Rester.Service
 
     public interface IActionInvokerFactory
     {
-        IActionInvoker CreateInvoker(string baseUri, ServiceEndpointAction action);
+        IActionInvoker CreateInvoker(string baseUri, ServiceAction action);
     }
 
     // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class ActionInvokerFactory : IActionInvokerFactory
     {
-        public IActionInvoker CreateInvoker(string baseUri, ServiceEndpointAction action)
+        public IActionInvoker CreateInvoker(string baseUri, ServiceAction action)
         {
             return new ActionInvokerActionInvoker(baseUri, action);
         }
@@ -30,9 +30,9 @@ namespace Rester.Service
     internal class ActionInvokerActionInvoker : IActionInvoker
     {
         private readonly string _baseUri;
-        private readonly ServiceEndpointAction _action;
+        private readonly ServiceAction _action;
 
-        public ActionInvokerActionInvoker(string baseUri, ServiceEndpointAction action)
+        public ActionInvokerActionInvoker(string baseUri, ServiceAction action)
         {
             _baseUri = baseUri;
             _action = action;

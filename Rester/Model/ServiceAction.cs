@@ -3,12 +3,12 @@ using GalaSoft.MvvmLight;
 
 namespace Rester.Model
 {
-    public class ServiceEndpointAction : AbstractResterModel
+    public class ServiceAction : AbstractResterModel
     {
 #if DEBUG
         [Obsolete("Constructor is only present for design purposes")]
         // ReSharper disable once UnusedMember.Global - Constructor is only present for design purposes
-        public ServiceEndpointAction()
+        public ServiceAction()
         {
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -23,10 +23,10 @@ namespace Rester.Model
         }
 #endif
 
-        public static ServiceEndpointAction CreateSilently(string name, string uriPath, string method,
+        public static ServiceAction CreateSilently(string name, string uriPath, string method,
             string body, string mediaType, Func<string> getBaseUri, bool editMode = false)
         {
-            return new ServiceEndpointAction(getBaseUri, editMode)
+            return new ServiceAction(getBaseUri, editMode)
             {
                 _uriPath = uriPath,
                 _name = name,
@@ -36,7 +36,7 @@ namespace Rester.Model
             };
         }
 
-        private ServiceEndpointAction(Func<string> getBaseUri, bool editMode) : base(editMode)
+        private ServiceAction(Func<string> getBaseUri, bool editMode) : base(editMode)
         {
             GetBaseUri = getBaseUri;
         }

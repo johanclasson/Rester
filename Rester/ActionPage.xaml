@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance Type=model:ServiceEndpointAction, IsDesignTimeCreatable=True}">
+    d:DataContext="{d:DesignInstance Type=model:ServiceAction, IsDesignTimeCreatable=True}">
     <Page.Resources>
         <converter:DataRestMethodToVisibilityConverter x:Key="RestMethodToVis" />
     </Page.Resources>

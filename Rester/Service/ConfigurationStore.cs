@@ -131,20 +131,20 @@ namespace Rester.Service
         {
             var configuration = ServiceConfiguration.CreateSilently("Domoticz", "http://mediacomputer:8080",
                 NavigationService, ActionInvokerFactory);
-            ServiceEndpointAction[] actions =
+            ServiceAction[] actions =
             {
-                ServiceEndpointAction.CreateSilently("On", "json.htm?type=command&param=switchlight&idx=1&switchcmd=Set%20Level&level=15", 
+                ServiceAction.CreateSilently("On", "json.htm?type=command&param=switchlight&idx=1&switchcmd=Set%20Level&level=15", 
                 "Get", "", "", () => configuration.BaseUri),
-                ServiceEndpointAction.CreateSilently("Off", "json.htm?type=command&param=switchlight&idx=1&switchcmd=Off",
+                ServiceAction.CreateSilently("Off", "json.htm?type=command&param=switchlight&idx=1&switchcmd=Off",
                 "Get", "", "", () => configuration.BaseUri)
             };
-            var serviceEndpoint = ServiceEndpoint.CreateSilently("Dining Room", configuration, NavigationService);
-            serviceEndpoint.Actions.AddRange(actions);
-            ServiceEndpoint[] endpoints =
+            var actionGroup = ActionGroup.CreateSilently("Dining Room", configuration, NavigationService);
+            actionGroup.Actions.AddRange(actions);
+            ActionGroup[] groups =
             {
-                serviceEndpoint
+                actionGroup
             };
-            configuration.Endpoints.AddRange(endpoints);
+            configuration.ActionGroups.AddRange(groups);
             return configuration;
         }
 
@@ -157,21 +157,21 @@ namespace Rester.Service
                 $"Service Config {i}", "http://myserviceurl:1234",
                 NavigationService, ActionInvokerFactory);
             var actions = Enumerable.Range(0, 7).Select(j => CreateAction(() => configuration.BaseUri, j));
-            var endpoints = Enumerable.Range(0, 6).Select(k => CreateEndpoint(configuration, actions, k));
-            configuration.Endpoints.AddRange(endpoints);
+            var groups = Enumerable.Range(0, 6).Select(k => CreateGroup(configuration, actions, k));
+            configuration.ActionGroups.AddRange(groups);
             return configuration;
         }
 
-        private static ServiceEndpoint CreateEndpoint(ServiceConfiguration configuration, IEnumerable<ServiceEndpointAction> actions, int i)
+        private static ActionGroup CreateGroup(ServiceConfiguration configuration, IEnumerable<ServiceAction> actions, int i)
         {
-            var serviceEndpoint = ServiceEndpoint.CreateSilently($"Endpoint {i}", configuration, NavigationService);
-            serviceEndpoint.Actions.AddRange(actions);
-            return serviceEndpoint;
+            var actionGroup = ActionGroup.CreateSilently($"Group {i}", configuration, NavigationService);
+            actionGroup.Actions.AddRange(actions);
+            return actionGroup;
         }
 
-        private static ServiceEndpointAction CreateAction(Func<string> configuration, int i)
+        private static ServiceAction CreateAction(Func<string> configuration, int i)
         {
-            return ServiceEndpointAction.CreateSilently($"Action with long name {i}",
+            return ServiceAction.CreateSilently($"Action with long name {i}",
                 "dostuff?a=b&c=d", "Get", "", "", configuration);
         }
     }

@@ -17,17 +17,17 @@ namespace Rester.Tests
                 _navigationService, invokerFactory);
         }
 
-        public ServiceConfigurationBuilder WithEndpoint(int index, int numberOfActions)
+        public ServiceConfigurationBuilder WithGroup(int index, int numberOfActions)
         {
-            var endpoint = ServiceEndpoint.CreateSilently($"My endpoint name {index}", _configuration,
+            var actionGroup = ActionGroup.CreateSilently($"My action group name {index}", _configuration,
                 _navigationService);
             for (int i = 1; i <= numberOfActions; i++)
             {
-                var action = ServiceEndpointAction.CreateSilently($"My action name {i}", $"my?action=path{i}",
+                var action = ServiceAction.CreateSilently($"My action name {i}", $"my?action=path{i}",
                     $"Post {i}", $"My action body {i}", $"My action content type {i}", () => _configuration.BaseUri);
-                endpoint.Actions.Add(action);
+                actionGroup.Actions.Add(action);
             }
-            _configuration.Endpoints.Add(endpoint);
+            _configuration.ActionGroups.Add(actionGroup);
             return this;
         }
 

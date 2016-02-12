@@ -91,7 +91,7 @@ namespace Rester.ViewModel
             sb.AppendLine($"Found configurations for {configurations.Length} service{GetPluralS(configurations)}. ");
             foreach (ServiceConfiguration configuration in configurations)
             {
-                var actions = configuration.Endpoints.SelectMany(e => e.Actions).ToArray();
+                var actions = configuration.ActionGroups.SelectMany(e => e.Actions).ToArray();
                 sb.AppendLine($" - {configuration.Name} ({actions.Length} action{GetPluralS(actions)})");
             }
             var message = "Do you want to replace the currently configured services, or have the new services added to to them?";
@@ -152,23 +152,23 @@ namespace Rester.ViewModel
         private void UpdateButtonSizes(UpdateButtonSizeMessage message)
         {
             double buttonSize = message.Size;
-            int maximumActionsInEndpoint = GetMaximumActionsInEndpoint();
-            double largestPossibleButtonArray = maximumActionsInEndpoint*(ButtonMaxSize + ButtonMargin) + AdditionalMargin;
+            int maximumActionsInGroup = GetMaximumActionsInGroup();
+            double largestPossibleButtonArray = maximumActionsInGroup*(ButtonMaxSize + ButtonMargin) + AdditionalMargin;
             if (largestPossibleButtonArray < message.ColumnWidth)
             {
                 buttonSize = ButtonMaxSize;
             }
-            var allActions = Configurations.SelectMany(c => c.Endpoints.SelectMany(e => e.Actions));
-            foreach (ServiceEndpointAction action in allActions)
+            var allActions = Configurations.SelectMany(c => c.ActionGroups.SelectMany(e => e.Actions));
+            foreach (ServiceAction action in allActions)
             {
                 if (Math.Abs(action.ButtonSize - buttonSize) > double.Epsilon)
                     action.ButtonSize = buttonSize;
             }
         }
 
-        private int GetMaximumActionsInEndpoint()
+        private int GetMaximumActionsInGroup()
         {
-            var actions = Configurations.SelectMany(c => c.Endpoints.Select(e => e.Actions.Count)).ToArray();
+            var actions = Configurations.SelectMany(c => c.ActionGroups.Select(e => e.Actions.Count)).ToArray();
             if (!actions.Any())
                 return 0;
             return actions.Max();

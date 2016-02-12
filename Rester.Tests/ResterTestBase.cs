@@ -26,15 +26,15 @@ namespace Rester.Tests
             return new ServiceConfigurationBuilder(NavigationServiceMock, InvokerFactoryMock);
         }
 
-        protected ServiceConfiguration[] BuildArrayOfConfigurations(int noConfigs, int noEndpoints, int noActions)
+        protected ServiceConfiguration[] BuildArrayOfConfigurations(int noConfigs, int noGroups, int noActions)
         {
             var configurations = new List<ServiceConfiguration>();
             for (int configIndex = 0; configIndex < noConfigs; configIndex++)
             {
                 ServiceConfigurationBuilder builder = CreateBuilder();
-                for (int endpointIndex = 0; endpointIndex < noEndpoints; endpointIndex++)
+                for (int groupIndex = 0; groupIndex < noGroups; groupIndex++)
                 {
-                    builder.WithEndpoint(endpointIndex, noActions);
+                    builder.WithGroup(groupIndex, noActions);
                 }
                 configurations.Add(builder);
             }

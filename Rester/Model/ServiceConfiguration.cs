@@ -31,13 +31,13 @@ namespace Rester.Model
         {
             _navigationService = navigationService;
             _invokerFactory = invokerFactory;
-            Endpoints = new ObservableCollectionWithAddRange<ServiceEndpoint>();
-            AddEndpointCommand = new RelayCommand(() =>
+            ActionGroups = new ObservableCollectionWithAddRange<ActionGroup>();
+            AddActionGroupCommand = new RelayCommand(() =>
             {
-                Endpoints.Add(ServiceEndpoint.CreateSilently("", this, _navigationService, EditMode));
+                ActionGroups.Add(ActionGroup.CreateSilently("", this, _navigationService, EditMode));
                 NotifyThatSomethingIsChanged();
             });
-            InvokeUriCommand = new RelayCommand<ServiceEndpointAction>(async action =>
+            InvokeUriCommand = new RelayCommand<ServiceAction>(async action =>
             {
                 if (EditMode)
                 {
@@ -47,33 +47,33 @@ namespace Rester.Model
                 {
                     action.Processing = true;
                     Messenger.Default.Send(new ActionProcessingMessage());
-                    ((RelayCommand<ServiceEndpointAction>) InvokeUriCommand).RaiseCanExecuteChanged();
+                    ((RelayCommand<ServiceAction>) InvokeUriCommand).RaiseCanExecuteChanged();
                     await InvokeRestActionAsync(action);
                     action.Processing = false;
-                    ((RelayCommand<ServiceEndpointAction>) InvokeUriCommand).RaiseCanExecuteChanged();
+                    ((RelayCommand<ServiceAction>) InvokeUriCommand).RaiseCanExecuteChanged();
                     await Task.Delay(1000); //The spinner animation should run at least 1 second
                     Messenger.Default.Send(new ActionCompletedMessage());
                 }
             }, action => action != null && !action.Processing);
-            DeleteEndpointCommand = new RelayCommand<ServiceEndpoint>(endpoint =>
+            DeleteActionGroupCommand = new RelayCommand<ActionGroup>(group =>
             {
-                Endpoints.Remove(endpoint);
+                ActionGroups.Remove(group);
                 NotifyThatSomethingIsChanged();
             });
         }
 
-        private async Task InvokeRestActionAsync(ServiceEndpointAction action)
+        private async Task InvokeRestActionAsync(ServiceAction action)
         {
             try
             {
                 var response = await _invokerFactory.CreateInvoker(BaseUri, action).InvokeRestActionAsync();
                 Messenger.Default.Send(new NotificationMessage<HttpResponse>(response,
-                    "Service Endpoint Action Result"));
+                    "Service Action Result"));
             }
             catch (Exception ex)
             {
-                await new MessageDialog($"Something bad happended: {ex.Message}").ShowAsync();
                 //TODO: Move dialog call to somewhere else
+                await new MessageDialog($"Something bad happended: {ex.Message}").ShowAsync();
             }
         }
 
@@ -83,14 +83,14 @@ namespace Rester.Model
         public string Name { get { return _name; } set { SetAndSave(nameof(Name), ref _name, value); } }
         private string _name;
 
-        public ObservableCollectionWithAddRange<ServiceEndpoint> Endpoints { get; }
-        public ICommand AddEndpointCommand { get; }
+        public ObservableCollectionWithAddRange<ActionGroup> ActionGroups { get; }
+        public ICommand AddActionGroupCommand { get; }
 
         // ReSharper disable once MemberCanBePrivate.Global - It is used by a child binding through element name
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public ICommand InvokeUriCommand { get; }
         // ReSharper disable once MemberCanBePrivate.Global - It is used by a child binding through element name
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public ICommand DeleteEndpointCommand { get; }
+        public ICommand DeleteActionGroupCommand { get; }
     }
 }
