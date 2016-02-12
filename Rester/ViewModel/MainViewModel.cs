@@ -94,12 +94,22 @@ namespace Rester.ViewModel
                 var actions = configuration.Endpoints.SelectMany(e => e.Actions).ToArray();
                 sb.AppendLine($" - {configuration.Name} ({actions.Length} action{GetPluralS(actions)})");
             }
+            var message = "Do you want to replace the currently configured services, or have the new services added to to them?";
+            const string title = "File content parsed correctly";
+
+#if ARM
             sb.Append("Do you want to proceed?");
-            string answer = await _dialog.ShowAsync(sb.ToString(), "File content parsed correctly", "Import", "Cancel");
+            string answer = await _dialog.ShowAsync(sb.ToString(), title, "Import", "Cancel");
             if (answer == "Cancel")
                 return;
-            var message = "Do you want to replace the currently configured services, or have the new services added to to them?";
             answer = await _dialog.ShowAsync(message, "Import Configurations", "Replace", "Add");
+#endif
+#if X86X64
+            sb.Append(message);
+            string answer = await _dialog.ShowAsync(sb.ToString(), title, "Replace", "Add", "Cancel");
+            if (answer == "Cancel")
+                return;
+#endif
             if (answer == "Replace")
                 Configurations.ClearAndAddRange(configurations);
             else
