@@ -4,7 +4,7 @@ Have you ever wished for a REST client that is easy to use on your windows phone
 
 Rester is a multi-purpose REST client. It lets you configure actions for your services, so you can then invoke one of those by just pressing a button. If you use Rester on many devices which are connected to the same Microsoft account, your configured service actions will be kept up to date on all of them. All without any need for additional setup.
 
-Rester is an Open Source project, so if you miss a feature and have the right skills, you can implement it yourself. See how you can contribute in the project website. 
+Rester is an Open Source project, so if you miss a feature and have the right skills, you can implement it yourself.
 
 ## Features
 
@@ -33,7 +33,7 @@ The implementation of Rester is still in progress. Because of that, you will fin
 
 * Logs are not persisted.
 * Although detailed information is logged, it is not displayed in the user interface.
-* Services, Endpoints and Actions cannot be reordered. This can be a mayor pain, but there is a workaround.
+* Services, action groups and actions cannot be reordered. This can be a mayor pain, but there is a workaround.
 	1. Export your data.
 	2. Unzip the .rdb-file, for example with [7-zip](http://www.7-zip.org/).
 	3. Edit the json-data with a text editor.
