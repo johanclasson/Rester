@@ -1,0 +1,68 @@
+Description:
+
+Rester is a multi-purpose REST client. It lets you configure actions for your services, so you can then invoke one of those by just pressing a button. If you use Rester on many devices which are connected to the same Microsoft account, your configured service actions will be kept up to date on all of them. All without any need for additional setup.
+
+Rester is an Open Source project, so if you miss a feature and have the right skills, you can implement it yourself. See how you can contribute in the project website. 
+
+The implementation of Rester is still in progress. Because of that, you will find that some features are missing. The most important ones that are not done (yet!) are:
+- Logs: persistence
+- Detailed log display
+- Reordering of services, action groups and actions
+- Authentication besides basic authentication
+- Expect data synchronization to be quite slow
+
+
+Release notes:
+
+"Something usable"
+
+
+App features:
+
+Visual Feedback: Get indications of when a request is started and when it has ended.
+Synchronize Configured Services: Data will be synchronized between all your devices which are connected to the same Microsoft Account.
+Multiple Service Requests: Run many service calls in parallel.
+Export Configured Service Actions: This can be used for backup purposes, or if you want to share your configuration with other people.
+Import Service Actions: When importing data you can choose to add the configured services to your collection of services, or to let them replace your collection entirely.
+Open Source: If you miss a feature, you can contribute it yourself.
+Responsive design: No matter what your screen size is, Rester will try to layout its buttons in an efficient manner.
+
+
+Screenshots:
+
+computer 1 two column.PNG:
+Two column standard mode.
+computer 2 three column edit.PNG:
+Three column edit mode. Note that buttons resize to make the most use of the available screen.
+computer 3 edit action.PNG:
+A separate page for editing an action.
+computer 4 import.PNG :
+Import dialog.
+mobile 1 portrait.png:
+One column standard mode.
+mobile 2 landscape.png
+Two column standard mode. The number of columns are set from how much of the screen that is available. 
+mobile 3 edit.png:
+One column edit mode.  
+mobile 4 edit action.png:
+A separate page for editing an action.
+mobile 5 menu.png
+The available commands. Press Done to end the edit mode.
+mobile 6 import.png
+Import dialog.
+
+
+Keywords:
+
+rest client
+rest
+client
+http
+request
+web
+post
+
+
+Website:
+
+https://github.com/johanclasson/Rester
