@@ -4,7 +4,11 @@ Have you ever wished for a REST client that is easy to use on your windows phone
 
 Rester is a multi-purpose REST client. It lets you configure actions for your services, so you can then invoke one of those by just pressing a button. If you use Rester on many devices which are connected to the same Microsoft account, your configured service actions will be kept up to date on all of them. All without any need for additional setup.
 
-Rester is an Open Source project, so if you miss a feature and have the right skills, you can implement it yourself.
+Rester is an Open Source project. If you miss a feature and have the right skills, you can implement it yourself.
+
+You can find Rester in the Microsoft Store.
+
+[![Get it on Windows 10](https://assets.windowsphone.com/d86ab9b4-2f3d-4a94-92f8-1598073e7343/English_Get_it_Win_10_InvariantCulture_Default.png)](https://www.microsoft.com/store/apps/9nblggh5qpgx).
 
 ## Features
 
