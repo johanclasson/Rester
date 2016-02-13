@@ -7,7 +7,9 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
+using Rester.ViewModel;
 
 namespace Rester
 {
@@ -30,7 +32,8 @@ namespace Rester
         protected override void OnFileActivated(FileActivatedEventArgs e)
         {
             StorageFile[] storageFiles = e.Files.Cast<StorageFile>().ToArray();
-            Init(e.PreviousExecutionState, storageFiles);
+            SimpleIoc.Default.GetInstance<MainViewModel>().AddFilesForImport(storageFiles);
+            Init(e.PreviousExecutionState, forceNavigationToMain: true);
         }
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
@@ -65,7 +68,7 @@ namespace Rester
             deferral.Complete();
         }
 
-        private void Init(ApplicationExecutionState previousExecutionState, object arguments)
+        private void Init(ApplicationExecutionState previousExecutionState, object arguments = null, bool forceNavigationToMain = false)
         {
 
 #if DEBUG
@@ -104,12 +107,12 @@ namespace Rester
                     AppViewBackButtonVisibility.Collapsed;
             }
 
-            if (rootFrame.Content == null)
+            if (rootFrame.Content == null || forceNavigationToMain)
             {
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(typeof(MainPage), arguments);
+                rootFrame.Navigate(typeof (MainPage), arguments);
             }
             // Ensure the current window is active
             Window.Current.Activate();

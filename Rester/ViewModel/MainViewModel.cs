@@ -75,7 +75,7 @@ namespace Rester.ViewModel
             await ImportConfigurationsFromFileAsync(storageFile);
         }
 
-        public async Task ImportConfigurationsFromFileAsync(StorageFile storageFile)
+        private async Task ImportConfigurationsFromFileAsync(StorageFile storageFile)
         {
             ServiceConfiguration[] configurations;
             try
@@ -200,5 +200,20 @@ namespace Rester.ViewModel
         public ICommand ExportConfigurationsCommand { get; }
         public ICommand ImportConfigurationsCommand { get; }
         public ICommand NavigateToAboutPageCommand { get; }
+
+        private List<StorageFile> FilesForImport { get; } = new List<StorageFile>(); 
+        public void AddFilesForImport(StorageFile[] storageFiles)
+        {
+            FilesForImport.AddRange(storageFiles);
+        }
+
+        public async Task ProcessFilesToImport()
+        {
+            foreach (StorageFile storageFile in FilesForImport.ToArray())
+            {
+                await ImportConfigurationsFromFileAsync(storageFile);
+                FilesForImport.Remove(storageFile);
+            }
+        }
     }
 }

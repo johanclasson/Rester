@@ -1,5 +1,4 @@
-﻿using Windows.Storage;
-using Windows.UI.Xaml.Navigation;
+﻿using Windows.UI.Xaml.Navigation;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using Rester.Model;
@@ -29,14 +28,7 @@ namespace Rester
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            var storageFiles = e.Parameter as StorageFile[];
-            if (storageFiles == null)
-                return;
-            var mainViewModel = SimpleIoc.Default.GetInstance<MainViewModel>();
-            foreach (StorageFile storageFile in storageFiles)
-            {
-                await mainViewModel.ImportConfigurationsFromFileAsync(storageFile);
-            }
+            await SimpleIoc.Default.GetInstance<MainViewModel>().ProcessFilesToImport();
         }
     }
 }
