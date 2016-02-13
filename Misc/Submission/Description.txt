@@ -28,6 +28,30 @@ Open Source: If you miss a feature, you can contribute it yourself.
 Responsive design: No matter what your screen size is, Rester will try to layout its buttons in an efficient manner.
 
 
+Screenshots:
+
+computer 1 two column.PNG:
+Two column standard mode.
+computer 2 three column edit.PNG:
+Three column edit mode. Note that buttons resize to make the most use of the available screen.
+computer 3 edit action.PNG:
+A separate page for editing an action.
+computer 4 import.PNG :
+Import dialog.
+mobile 1 portrait.png:
+One column standard mode.
+mobile 2 landscape.png
+Two column standard mode. The number of columns are set from how much of the screen that is available. 
+mobile 3 edit.png:
+One column edit mode.  
+mobile 4 edit action.png:
+A separate page for editing an action.
+mobile 5 menu.png
+The available commands. Press Done to end the edit mode.
+mobile 6 import.png
+Import dialog.
+
+
 Keywords:
 
 rest client
