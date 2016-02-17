@@ -71,6 +71,8 @@ namespace Rester.Model
             }
         }
 
+        public Uri Uri => new Uri(BaseUri + UriPath);
+
         public double ButtonSize { get { return _buttonSize; } set { Set(nameof(ButtonSize), ref _buttonSize, value); } }
         private double _buttonSize = 100;
     }

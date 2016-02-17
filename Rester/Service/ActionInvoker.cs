@@ -15,30 +15,26 @@ namespace Rester.Service
 
     public interface IActionInvokerFactory
     {
-        IActionInvoker CreateInvoker(string baseUri, ServiceAction action);
+        IActionInvoker CreateInvoker(ServiceAction action);
     }
 
     // ReSharper disable once ClassNeverInstantiated.Global - Instantiated through IoC
     internal class ActionInvokerFactory : IActionInvokerFactory
     {
-        public IActionInvoker CreateInvoker(string baseUri, ServiceAction action)
+        public IActionInvoker CreateInvoker(ServiceAction action)
         {
-            return new ActionInvokerActionInvoker(baseUri, action);
+            return new ActionInvokerActionInvoker(action);
         }
     }
 
     internal class ActionInvokerActionInvoker : IActionInvoker
     {
-        private readonly string _baseUri;
         private readonly ServiceAction _action;
 
-        public ActionInvokerActionInvoker(string baseUri, ServiceAction action)
+        public ActionInvokerActionInvoker(ServiceAction action)
         {
-            _baseUri = baseUri;
             _action = action;
         }
-
-        private Uri Uri => new Uri(new Uri(_baseUri), _action.UriPath);
 
         public async Task<HttpResponse> InvokeRestActionAsync()
         {
@@ -71,7 +67,7 @@ namespace Rester.Service
                 ReasonPhrase = reasonPhrase,
                 Content = content,
                 TimeToResponse = watch.Elapsed,
-                Uri = Uri.AbsoluteUri,
+                Uri = _action.Uri.AbsoluteUri,
                 Method = _action.Method,
                 CallTime = callTime,
                 IsSuccessfulStatusCode = isSuccessfulStatusCode
@@ -86,13 +82,13 @@ namespace Rester.Service
                 switch (_action.Method.ToLower())
                 {
                     case "get":
-                        return await client.GetAsync(Uri);
+                        return await client.GetAsync(_action.Uri);
                     case "put":
-                        return await client.PutAsync(Uri, new StringContent(_action.Body, Encoding.UTF8, _action.MediaType));
+                        return await client.PutAsync(_action.Uri, new StringContent(_action.Body, Encoding.UTF8, _action.MediaType));
                     case "post":
-                        return await client.PostAsync(Uri, new StringContent(_action.Body, Encoding.UTF8, _action.MediaType));
+                        return await client.PostAsync(_action.Uri, new StringContent(_action.Body, Encoding.UTF8, _action.MediaType));
                     case "delete":
-                        return await client.DeleteAsync(Uri);
+                        return await client.DeleteAsync(_action.Uri);
                     default:
                         throw new ArgumentException($"Encountered unknown http method {_action.Method}");
                 }
