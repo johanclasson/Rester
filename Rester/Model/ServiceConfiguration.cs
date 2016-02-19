@@ -66,7 +66,7 @@ namespace Rester.Model
         {
             try
             {
-                var response = await _invokerFactory.CreateInvoker(BaseUri, action).InvokeRestActionAsync();
+                var response = await _invokerFactory.CreateInvoker(action).InvokeRestActionAsync();
                 Messenger.Default.Send(new NotificationMessage<HttpResponse>(response,
                     "Service Action Result"));
             }
